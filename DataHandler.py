@@ -65,8 +65,15 @@ class DataHandler:
         self.feat_dict = {}
 
     def create_reg(self):
-        self.reg_df = pd.read_csv(self.reg_flie, low_memory=False)
+        # self.reg_df = pd.read_csv(self.reg_flie, low_memory=False, error_bad_lines = False)
+        # self.reg_df['pair'] = self.reg_df['candName'] + '<->' + self.reg_df['targName']
+        mylist = []
+        for chunk in pd.read_csv(self.reg_flie, low_memory=False, chunksize=10 ** 6):
+            mylist.append(chunk)
+        self.reg_df = pd.concat(mylist, axis=0)
         self.reg_df['pair'] = self.reg_df['candName'] + '<->' + self.reg_df['targName']
+        del mylist
+
 
     # def create_feat(self):
     #     self.feat_df = pd.read_csv(self.feat_file, low_memory=False)
