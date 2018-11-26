@@ -26,8 +26,7 @@ class ModelVisualizer:
         plt.imshow(new_mat, interpolation="nearest", cmap="gray")
         plt.savefig('./figures/' + _type + '_' + str(matId) + '_filter_applied_GRU.jpg', bbox_inches='tight', format='jpg')
         adapted = self.model.predict_classes(self.dh.conf_dict_seq[matId], verbose=2)
-        print(adapted.shape)
-        adapted = adapted.reshape(self.dh.matN[matId], self.dh.matM[matId])
+        adapted = adapted[0].reshape(self.dh.matN[matId], self.dh.matM[matId])
         plt.imshow(adapted, interpolation="nearest", cmap="gray")
         plt.savefig('./figures/' + _type + '_' + str(matId) + '_adapted_GRU.jpg', bbox_inches='tight', format='jpg')
 
