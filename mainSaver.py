@@ -67,9 +67,6 @@ def model_worker_eval(model, X, y, e, b, v):
         mat_i = mat[i]
         mat[i] = mat[j]
         mat[j] = mat_i
-        exMat_i = exMat[i]
-        exMat[i] = exMat[j]
-        exMat[j] = exMat_i
         X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
         model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
         i = random.randint(0, mat.shape[1]-1)
@@ -77,9 +74,6 @@ def model_worker_eval(model, X, y, e, b, v):
         mat_i = mat[:, i]
         mat[:, i] = mat[:, j]
         mat[:, j] = mat_i
-        exMat_i = exMat[:, i]
-        exMat[:, i] = exMat[:, j]
-        exMat[:, j] = exMat_i
         X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
         model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     return model
