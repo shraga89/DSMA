@@ -6,7 +6,7 @@ from keras.utils import to_categorical
 from keras.models import model_from_json
 import random
 import multiprocessing as mp
-import AdaptAndEval.FeatureBasedEvaluator as FBE
+import FeatureBasedEvaluator as FBE
 
 
 def data_saver(model, model_name):

@@ -4,7 +4,7 @@ from surprise import Dataset
 from surprise import Reader
 import pandas as pd
 from scipy import sparse
-import AdaptAndEval.FeatureBasedEvaluator as FBE
+import FeatureBasedEvaluator as FBE
 
 
 def deep_adapt_and_evaluate(instance, _type, adaptor, is_adaptor_mat, evaluator, is_evaluator_mat, X_seq, X_mat, y,

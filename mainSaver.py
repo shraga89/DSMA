@@ -1,11 +1,10 @@
-import AdaptAndEval.DataHandler as DH
-import AdaptAndEval.DeepAdaptor as DA
-import AdaptAndEval.BaseAdaptor as BA
-import AdaptAndEval.DeepEvaluator as DE
-import AdaptAndEval.ModelVisualizer as MV
-import AdaptAndEval.AdaptAndEvaluate as AnE
-import AdaptAndEval.FeatureBasedEvaluator as FBE
-import AdaptAndEval.MyGenerator as My_Generator
+import DataHandler as DH
+import DeepAdaptor as DA
+import BaseAdaptor as BA
+import DeepEvaluator as DE
+import ModelVisualizer as MV
+import AdaptAndEvaluate as AnE
+import FeatureBasedEvaluator as FBE
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
@@ -16,7 +15,7 @@ import time
 import os
 import random
 import multiprocessing as mp
-tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=4))
+tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 
 
 def model_worker_adapt(model, X, y, e, b, v):
@@ -156,8 +155,8 @@ for train, test in kfold.split(keys):
         for clf in FBE.classifiers:
             clf[1].fit(X_feat, y_single)
 
-    # mv_adapt = MV.ModelVisualizer(gru_model_adapt, dh)
-    # mv_adapt.visualize_gru(1, False)
+    mv_adapt = MV.ModelVisualizer(gru_model_adapt, dh)
+    mv_adapt.visualize_gru(1, False)
     # mv_eval = MV.ModelVisualizer(gru_model_eval, dh)
     # mv_eval.visualize_gru(1, True)
     # mv_eval_cnn = MV.ModelVisualizer(cnn_2d_model_eval, dh)
@@ -168,7 +167,7 @@ for train, test in kfold.split(keys):
     # mv_eval.visualize_gru(0, True)
     # mv_eval_cnn = MV.ModelVisualizer(cnn_2d_model_eval, dh)
     # mv_eval_cnn.visualize_cnn(0, True)
-    # DH.data_saver(gru_model_adapt, "./models/gru_adapt_no_attention_model_fold_" + str(i))
+    DH.data_saver(gru_model_adapt, "./models/gru_adapt_no_attention_model_fold_" + str(i))
     # DH.data_saver(cnn_model_adapt, "./models/cnn_adapt_no_attention_model_fold_" + str(i))
     # DH.data_saver(dnn_model_adapt, "./models/dnn_adapt_no_attention_model_fold_" + str(i))
     # DH.data_saver(crnn_model_adapt, "./models/crnn_adapt_no_attention_model_fold_" + str(i))
