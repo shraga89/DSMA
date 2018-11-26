@@ -58,7 +58,7 @@ def model_worker_adapt(model, X, y, e, b, v):
 def model_worker_eval(model, X, y, e, b, v):
     mat = X.reshape(X.shape[1:3])
     X_seq = mat.reshape(1, mat.shape[0]*mat.shape[1], 1)
-    model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
+    model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     X_seq = mat.T.reshape(1, mat.shape[0]*mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     for _ in range(4):
