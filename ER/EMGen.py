@@ -3,6 +3,7 @@ import pandas as pd
 import py_entitymatching as em
 import networkx as nx
 import matplotlib.pyplot as plt
+import os.path
 
 path = '/lv_local/home/shraga89/ORE/DSMA/ER/ds_with_exact/Dirty/dirty_dblp_scholar_exp_data/exp_data/'
 
@@ -35,6 +36,7 @@ def get_predictions(c, t, predictions):
     return preds
 
 
+print(os.path.isfile(path + 'TableA.csv'))
 A = em.read_csv_metadata(path + 'TableA.csv', key='id')
 B = em.read_csv_metadata(path + 'TableB.csv', key='id')
 train = pd.read_csv(path + 'train.csv', low_memory=False, encoding='ISO-8859-1')
