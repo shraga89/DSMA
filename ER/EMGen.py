@@ -4,7 +4,7 @@ import py_entitymatching as em
 import networkx as nx
 import matplotlib.pyplot as plt
 
-path = './ds_with_exact/Dirty/dirty_dblp_scholar_exp_data/exp_data/'
+path = '/ds_with_exact/Dirty/dirty_dblp_scholar_exp_data/exp_data/'
 
 
 def get_features(c, t):
