@@ -29,7 +29,7 @@ def model_worker_adapt(model, X, y, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0]*mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    for _ in range(4):
+    for _ in range(1):
         i = random.randint(0, mat.shape[0]-1)
         j = random.randint(0, mat.shape[0]-1)
         mat_i = mat[i]
@@ -119,7 +119,7 @@ dh = DH.DataHandler('../VectorsWF.csv', '../_matrix.csv', True)
 dh.build_eval(False)
 dh.build_feat_dataset()
 kfold = KFold(5, True, 1)
-keys = np.array(list(dh.conf_dict.keys()))[:]
+keys = np.array(list(dh.conf_dict.keys()))[:5000]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
 res_adapt = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r', 'old_f', 'new_p', 'new_r', 'new_f'])
 res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r',
@@ -169,6 +169,7 @@ for train, test in kfold.split(keys):
 
         # REG EVAL
         X_feat = dh.feat_dict[epoch]
+        X_feat = np.nan_to_num(X_feat)
         for clf in FBE.classifiers:
             clf[1].fit(X_feat, y_single)
 
