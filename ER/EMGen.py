@@ -7,7 +7,7 @@ import os.path
 import os
 os.environ['QT_QPA_PLATFORM']='offscreen'
 path = './ds_with_exact/Dirty/dirty_dblp_scholar_exp_data/exp_data/'
-
+import deepmatcher as dm
 
 def get_features(c, t):
     feats = {}
@@ -159,6 +159,18 @@ for m in matchers:
                                           exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
                                           append=True,
                                           target_attr='predicted')
+temp = test_feature_vectors.copy()
+deepModel = dm.MatchingModel()
+deepModel.run_train(
+    train_feature_vectors,
+    temp,
+    epochs=10,
+    batch_size=16,
+    best_save_path='hybrid_model.pth',
+    pos_neg_ratio=3)
+unlabeled = dm.data.process_unlabeled(path='data_directory/test.csv', trained_model=deepModel)
+predictions["deepMatcher"] = deepModel.run_prediction(unlabeled)
+print(predictions["deepMatcher"])
 
 df = pd.DataFrame(columns=['instance', 'candName', 'targName', 'conf', 'realConf'])
 epoch = 1
