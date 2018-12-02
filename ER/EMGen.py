@@ -108,7 +108,7 @@ blocks = [b for b in blocks if len(b) > 10 and len(b) < 100]
 print("Num of blocks:" + str(len(blocks)))
 print("Avg size of blocks:" + str(sum([len(b) for b in blocks]) / len(blocks)))
 sim = em.get_sim_funs_for_matching()
-features = em.get_features_for_matching(A.drop(columns=['id']), B.drop(columns=['id']))
+features = em.get_features_for_matching(A.drop('id', axis=1), B.drop('id', axis=1))
 
 dt = em.DTMatcher(name='DecisionTree')
 svm = em.SVMMatcher(name='SVM')
