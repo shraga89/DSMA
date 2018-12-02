@@ -36,9 +36,9 @@ def get_predictions(c, t, predictions):
     return preds
 
 
-print(os.path.isfile(path + 'TableA.csv'))
-A = em.read_csv_metadata(path + 'TableA.csv', key='id')
-B = em.read_csv_metadata(path + 'TableB.csv', key='id')
+print(os.path.isfile(path + 'tableA.csv'))
+A = em.read_csv_metadata(path + 'tableA.csv', key='id')
+B = em.read_csv_metadata(path + 'tableB.csv', key='id')
 train = pd.read_csv(path + 'train.csv', low_memory=False, encoding='ISO-8859-1')
 test = pd.read_csv(path + 'test.csv', low_memory=False, encoding='ISO-8859-1')
 valid = pd.read_csv(path + 'valid.csv', low_memory=False, encoding='ISO-8859-1')
