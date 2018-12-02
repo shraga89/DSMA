@@ -4,8 +4,9 @@ import py_entitymatching as em
 import networkx as nx
 import matplotlib.pyplot as plt
 import os.path
-
-path = '/lv_local/home/shraga89/ORE/DSMA/ER/ds_with_exact/Dirty/dirty_dblp_scholar_exp_data/exp_data/'
+import os
+os.environ['QT_QPA_PLATFORM']='offscreen'
+path = './ds_with_exact/Dirty/dirty_dblp_scholar_exp_data/exp_data/'
 
 
 def get_features(c, t):
