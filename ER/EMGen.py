@@ -176,14 +176,22 @@ for m in matchers:
                                           exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
                                           append=True,
                                           target_attr='predicted')
-temp = test_feature_vectors.copy()
-train, validation, test = dm.data.process(path=path,
-                                          train='train.csv', validation='validation.csv', test='test.csv')
+dm.data.split(L, path + '/deep/', 'train.csv', 'valid.csv', 'test.csv',
+              [3, 1, 1])
+train, validation, test = dm.data.process(
+    path=path + '/deep/',
+    cache='train_cache.pth',
+    train='train.csv',
+    validation='valid.csv',
+    test='test.csv',
+    use_magellan_convention=True,
+    ignore_columns=('ltable_id', 'rtable_id'))
 deepModel = dm.MatchingModel()
 deepModel.run_train(
-    train_feature_vectors,
-    temp,
-    best_save_path='hybrid_model.pth')
+    train,
+    validation,
+    best_save_path='best_model.pth')
+print(deepModel.run_eval(test))
 unlabeled = dm.data.process_unlabeled(path=path + '/test.csv', trained_model=deepModel)
 predictions["deepMatcher"] = deepModel.run_prediction(unlabeled)
 print(predictions["deepMatcher"])
