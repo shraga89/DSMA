@@ -135,7 +135,7 @@ L = em.read_csv_metadata(path + 'K1.csv',
                          ltable=A, rtable=B,
                          fk_ltable='ltable_id', fk_rtable='rtable_id')
 # L = K1.copy()
-print(L.columns)
+# print(L.columns)
 L['gold'] = 0
 trues = exact[exact['gold'] == 1][['ltable.id', 'rtable.id']]
 L['temp'] = L['ltable_id'].astype(str) + L['rtable_id'].astype(str)
@@ -179,7 +179,7 @@ for m in matchers:
 
 if not os.path.exists(path + 'deep'):
     os.makedirs(path + 'deep')
-L = L.drop('gold', axis=1)
+L = L.drop(['Unnamed: 0', '_id', 'gold'], axis=1)
 dm.data.split(L, path + 'deep', 'train.csv', 'valid.csv', 'test.csv',
               [3, 1, 1])
 train, validation, test = dm.data.process(
