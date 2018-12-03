@@ -179,7 +179,7 @@ for m in matchers:
 
 if not os.path.exists(path + 'deep'):
     os.makedirs(path + 'deep')
-L = L.drop(['Unnamed: 0', '_id', 'gold', 'temp'], axis=1)
+L = L.drop(['Unnamed: 0', 'gold', 'temp'], axis=1)
 print(L.columns)
 dm.data.split(L, path + 'deep', 'train.csv', 'valid.csv', 'test.csv',
               [3, 1, 1])
