@@ -6,8 +6,9 @@ import matplotlib.pyplot as plt
 import os.path
 import os
 os.environ['QT_QPA_PLATFORM']='offscreen'
-path = './ds_with_exact/Dirty/dirty_dblp_scholar_exp_data/exp_data/'
+path = './ds_with_exact/Structured/dblp_scholar_exp_data/exp_data/'
 import deepmatcher as dm
+
 
 def get_features(c, t):
     feats = {}
@@ -85,7 +86,7 @@ K1 = ob.block_candset(K1, 'authors', 'authors', overlap_size=3)
 # K2 = ob.block_candset(K2, 'Album_Name', 'Album_Name', overlap_size=3)
 
 # K2 = ob.block_tables(A, B, 'description', 'description',
-#                     l_output_attrs=list(A.columns), 
+#                     l_output_attrs=list(A.columns),
 #                     r_output_attrs=list(B.columns),
 #                     overlap_size=8)
 
@@ -105,7 +106,7 @@ blocks = list(nx.connected_components(G))
 # G.add_edges_from(list(zip(K2['ltable_id'], K2['rtable_id'])))
 # blocks += list(nx.connected_components(G))
 
-blocks = [b for b in blocks if len(b) > 10 and len(b) < 100]
+blocks = [b for b in blocks if 10 < len(b) < 100]
 print("Num of blocks:" + str(len(blocks)))
 print("Avg size of blocks:" + str(sum([len(b) for b in blocks]) / len(blocks)))
 sim = em.get_sim_funs_for_matching()
@@ -119,7 +120,22 @@ lg = em.LogRegMatcher(name='LogReg')
 ln = em.LinRegMatcher(name='LinReg')
 matchers = [dt, svm, rf, nb, lg, ln]
 
-L = em.label_table(K1, 'gold', verbose=2)
+# L = em.label_table(K1, 'gold', verbose=2)
+# print(L.columns)
+# print(type(L))
+# print(K1.columns)
+# print(type(K1))
+# cols = list(K1.columns)
+# cols[1:3] = ['ltable.id', 'rtable.id']
+# K1.columns = cols
+K1.to_csv(path + 'K1.csv')
+L = em.read_csv_metadata(path + 'K1.csv',
+                         key='_id',
+                         ltable=A, rtable=B,
+                         fk_ltable='ltable_id', fk_rtable='rtable_id')
+# L = K1.copy()
+print(L.columns)
+L['gold'] = 0
 trues = exact[exact['gold'] == 1][['ltable.id', 'rtable.id']]
 L['temp'] = L['ltable_id'].astype(str) + L['rtable_id'].astype(str)
 trues['temp'] = trues['ltable.id'].astype(str) + trues['rtable.id'].astype(str)
