@@ -176,6 +176,9 @@ for m in matchers:
                                           exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
                                           append=True,
                                           target_attr='predicted')
+
+if not os.path.exists(path + 'deep'):
+    os.makedirs(path + 'deep')
 dm.data.split(L, path + 'deep', 'train.csv', 'valid.csv', 'test.csv',
               [3, 1, 1])
 train, validation, test = dm.data.process(
