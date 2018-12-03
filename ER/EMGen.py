@@ -180,10 +180,7 @@ deepModel = dm.MatchingModel()
 deepModel.run_train(
     train_feature_vectors,
     temp,
-    epochs=10,
-    batch_size=16,
-    best_save_path='hybrid_model.pth',
-    pos_neg_ratio=3)
+    best_save_path='hybrid_model.pth')
 unlabeled = dm.data.process_unlabeled(path='data_directory/test.csv', trained_model=deepModel)
 predictions["deepMatcher"] = deepModel.run_prediction(unlabeled)
 print(predictions["deepMatcher"])
