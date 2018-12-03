@@ -177,7 +177,7 @@ for m in matchers:
                                           append=True,
                                           target_attr='predicted')
 temp = test_feature_vectors.copy()
-train, validation, test = dm.data.process(path='path',
+train, validation, test = dm.data.process(path=path,
                                           train='train.csv', validation='validation.csv', test='test.csv')
 deepModel = dm.MatchingModel()
 deepModel.run_train(
