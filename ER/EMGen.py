@@ -176,10 +176,10 @@ for m in matchers:
                                           exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
                                           append=True,
                                           target_attr='predicted')
-dm.data.split(L, path + '/deep/', 'train.csv', 'valid.csv', 'test.csv',
+dm.data.split(L, path + '/deep', 'train.csv', 'valid.csv', 'test.csv',
               [3, 1, 1])
 train, validation, test = dm.data.process(
-    path=path + '/deep/',
+    path=path + '/deep',
     cache='train_cache.pth',
     train='train.csv',
     validation='valid.csv',
