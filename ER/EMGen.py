@@ -5,7 +5,8 @@ import networkx as nx
 import matplotlib.pyplot as plt
 import os.path
 import os
-os.environ['QT_QPA_PLATFORM']='offscreen'
+
+os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 path = './ds_with_exact/Structured/dblp_scholar_exp_data/exp_data/'
 import deepmatcher as dm
 
@@ -176,12 +177,14 @@ for m in matchers:
                                           append=True,
                                           target_attr='predicted')
 temp = test_feature_vectors.copy()
+train, validation, test = dm.data.process(path='path',
+                                          train='train.csv', validation='validation.csv', test='test.csv')
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     train_feature_vectors,
     temp,
     best_save_path='hybrid_model.pth')
-unlabeled = dm.data.process_unlabeled(path='data_directory/test.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + '/test.csv', trained_model=deepModel)
 predictions["deepMatcher"] = deepModel.run_prediction(unlabeled)
 print(predictions["deepMatcher"])
 
