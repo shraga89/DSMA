@@ -8,7 +8,7 @@ from keras.layers import GlobalMaxPooling1D, MaxPooling1D
 from keras.layers import BatchNormalization
 from sklearn.metrics import f1_score, precision_score, recall_score, precision_recall_fscore_support
 import tensorflow as tf
-from theano.tensor.nnet.abstract_conv import border_mode_to_pad
+# from theano.tensor.nnet.abstract_conv import border_mode_to_pad
 
 
 def build_gru(first):
