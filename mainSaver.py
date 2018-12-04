@@ -16,22 +16,23 @@ import os
 import random
 import multiprocessing as mp
 import os
-os.environ['QT_QPA_PLATFORM']='offscreen'
-tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 
+os.environ['QT_QPA_PLATFORM'] = 'offscreen'
+# tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
+tf.Session(config=tf.ConfigProto(log_device_placement=True))
 
 def model_worker_adapt(model, X, y, e, b, v):
     mat = X.reshape(X.shape[1:3])
     exMat = y.reshape(y.shape[1:3])
-    X_seq = mat.reshape(1, mat.shape[0]*mat.shape[1], 1)
+    X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    X_seq = mat.T.reshape(1, mat.shape[0]*mat.shape[1], 1)
+    X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
     for _ in range(1):
-        i = random.randint(0, mat.shape[0]-1)
-        j = random.randint(0, mat.shape[0]-1)
+        i = random.randint(0, mat.shape[0] - 1)
+        j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
         mat[i] = mat[j]
         mat[j] = mat_i
@@ -41,8 +42,8 @@ def model_worker_adapt(model, X, y, e, b, v):
         X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
         y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
         model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-        i = random.randint(0, mat.shape[1]-1)
-        j = random.randint(0, mat.shape[1]-1)
+        i = random.randint(0, mat.shape[1] - 1)
+        j = random.randint(0, mat.shape[1] - 1)
         mat_i = mat[:, i]
         mat[:, i] = mat[:, j]
         mat[:, j] = mat_i
@@ -57,20 +58,20 @@ def model_worker_adapt(model, X, y, e, b, v):
 
 def model_worker_eval(model, X, y, e, b, v):
     mat = X.reshape(X.shape[1:3])
-    X_seq = mat.reshape(1, mat.shape[0]*mat.shape[1], 1)
+    X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
-    X_seq = mat.T.reshape(1, mat.shape[0]*mat.shape[1], 1)
+    X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     for _ in range(4):
-        i = random.randint(0, mat.shape[0]-1)
-        j = random.randint(0, mat.shape[0]-1)
+        i = random.randint(0, mat.shape[0] - 1)
+        j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
         mat[i] = mat[j]
         mat[j] = mat_i
         X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
         model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
-        i = random.randint(0, mat.shape[1]-1)
-        j = random.randint(0, mat.shape[1]-1)
+        i = random.randint(0, mat.shape[1] - 1)
+        j = random.randint(0, mat.shape[1] - 1)
         mat_i = mat[:, i]
         mat[:, i] = mat[:, j]
         mat[:, j] = mat_i
@@ -114,6 +115,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
                                                   crnn_model_eval, res_eval, count_eval)
 
 
+print(K.tensorflow_backend._get_available_gpus())
 E = 'f'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)
 dh.build_eval(False)
@@ -213,7 +215,6 @@ for train, test in kfold.split(keys):
                      gru_model_adapt, cnn_model_adapt, dnn_model_adapt, crnn_model_adapt)
 
         eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn_model_eval, crnn_model_eval)
-
 
         # GRU_GRU
         res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
