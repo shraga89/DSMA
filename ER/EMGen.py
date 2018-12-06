@@ -220,21 +220,21 @@ deepModel.run_train(
     train,
     validation,
     best_save_path='best_model.pth')
-unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/test.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/test.csv', trained_model=deepModel)
 first = deepModel.run_prediction(unlabeled)
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     validation,
     test,
     best_save_path='best_model.pth')
-unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/train.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/train.csv', trained_model=deepModel)
 second = deepModel.run_prediction(unlabeled)
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     test,
     train,
     best_save_path='best_model.pth')
-unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/valid.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/valid.csv', trained_model=deepModel)
 third = deepModel.run_prediction(unlabeled)
 predictions["deepMatcher"] = pd.concat([first, second, third])
 print(predictions["deepMatcher"])
