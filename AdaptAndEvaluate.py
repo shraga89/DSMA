@@ -65,7 +65,7 @@ def deep_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, m
         yhat_full = None
         yhat_full = adaptor.predict_classes(X, verbose=2)
         yhat_full = np.array(yhat_full.reshape(yhat_full.shape[1:-1] + (1,)))
-        yhat_single = clf[1].predict(X=X_f)
+        yhat_single = clf[1].predict(X=np.nan_to_num(X_f))
         k_adapt = 0
         res_row_adapt = np.concatenate((instance, _type + clf[0], str(k_adapt),
                                         precision_recall_fscore_support(y,
@@ -77,7 +77,7 @@ def deep_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, m
         count_adapt_eval += 1
         k_adapt += 1
         yhat_full = np.array(yhat_full.reshape((1,) + yhat_full.shape))
-        yhat_new = clf[1].predict(X=FBE.extractPreds(yhat_full.reshape(matN, matM)))
+        yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(yhat_full.reshape(matN, matM))))
         while yhat_new > yhat_single:
             X = yhat_full
             yhat_full = adaptor.predict_classes(X, verbose=2)
@@ -93,7 +93,7 @@ def deep_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, m
             res_adapt_eval.loc[count_adapt_eval] = res_row_adapt
             count_adapt_eval += 1
             k_adapt += 1
-            yhat_new = clf[1].predict(X=FBE.extractPreds(X.reshape(matN, matM)))
+            yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(X.reshape(matN, matM))))
     return res_adapt_eval, count_adapt_eval
 
 
@@ -280,7 +280,7 @@ def ir_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, mat
             yhat_full = np.ceil(np.array(X.reshape(y.shape)))
         yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
         yhat_full[np.isnan(yhat_full)] = 0
-        yhat_single = clf[1].predict(X=X_f)
+        yhat_single = clf[1].predict(X=np.nan_to_num(X_f))
         k_adapt = 0
         res_row_adapt = np.concatenate((instance, _type + clf[0], str(k_adapt),
                                         precision_recall_fscore_support(y,
@@ -293,7 +293,7 @@ def ir_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, mat
         count_adapt_eval += 1
         k_adapt += 1
         yhat_full = np.array(yhat_full.reshape((1,) + yhat_full.shape))
-        yhat_new = clf[1].predict(X=FBE.extractPreds(yhat_full.reshape(matN, matM)))
+        yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(yhat_full.reshape(matN, matM))))
         while yhat_new > yhat_single:
             X = yhat_full
             try:
@@ -314,7 +314,7 @@ def ir_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, mat
             res_adapt_eval.loc[count_adapt_eval] = res_row_adapt
             count_adapt_eval += 1
             k_adapt += 1
-            yhat_new = clf[1].predict(X=FBE.extractPreds(X.reshape(matN, matM)))
+            yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(X.reshape(matN, matM))))
     return res_adapt_eval, count_adapt_eval
 
 
@@ -341,7 +341,7 @@ def svd_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
             yhat_full += [t[2]]
         yhat_full = np.array(yhat_full)
         yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
-        yhat_single = clf[1].predict(X=X_f)
+        yhat_single = clf[1].predict(X=np.nan_to_num(X_f))
         k_adapt = 0
         res_row_adapt = np.concatenate((instance, _type + clf[0], str(k_adapt),
                                         precision_recall_fscore_support(y,
@@ -354,7 +354,7 @@ def svd_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
         count_adapt_eval += 1
         k_adapt += 1
         yhat_full = np.array(yhat_full.reshape((1,) + yhat_full.shape))
-        yhat_new = clf[1].predict(X=FBE.extractPreds(yhat_full.reshape(matN, matM)))
+        yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(yhat_full.reshape(matN, matM))))
         while yhat_new > yhat_single:
             X = yhat_full
             items = list()
@@ -387,7 +387,7 @@ def svd_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
             res_adapt_eval.loc[count_adapt_eval] = res_row_adapt
             count_adapt_eval += 1
             k_adapt += 1
-            yhat_new = clf[1].predict(X=FBE.extractPreds(X.reshape(matN, matM)))
+            yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(X.reshape(matN, matM))))
     return res_adapt_eval, count_adapt_eval
 
 
@@ -409,7 +409,7 @@ def bpr_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
             yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
         except:
             yhat_full = np.ceil(np.array(X.reshape(y.shape)))
-        yhat_single = clf[1].predict(X=X_f)
+        yhat_single = clf[1].predict(X=np.nan_to_num(X_f))
         k_adapt = 0
         res_row_adapt = np.concatenate((instance, _type + clf[0], str(k_adapt),
                                         precision_recall_fscore_support(y,
@@ -422,7 +422,7 @@ def bpr_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
         count_adapt_eval += 1
         k_adapt += 1
         yhat_full = np.array(yhat_full.reshape((1,) + yhat_full.shape))
-        yhat_new = clf[1].predict(X=FBE.extractPreds(yhat_full.reshape(matN, matM)))
+        yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(yhat_full.reshape(matN, matM))))
         while yhat_new > yhat_single:
             X = yhat_full
             try:
@@ -450,7 +450,7 @@ def bpr_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
             res_adapt_eval.loc[count_adapt_eval] = res_row_adapt
             count_adapt_eval += 1
             k_adapt += 1
-            yhat_new = clf[1].predict(X=FBE.extractPreds(X.reshape(matN, matM)))
+            yhat_new = clf[1].predict(X=np.nan_to_num(FBE.extractPreds(X.reshape(matN, matM))))
     return res_adapt_eval, count_adapt_eval
 
 
@@ -479,7 +479,7 @@ def only_deep_adapt(instance, _type, X, y, adaptor, res_adapt, count_adapt):
 
 def only_reg_evaluate(instance, _type, X, y, evaluators, res_eval, count_eval):
     for clf in evaluators:
-        yhat_single = clf[1].predict(X=X)
+        yhat_single = clf[1].predict(X=np.nan_to_num(X))
         res_row_eval = np.concatenate(
             (instance, _type + clf[0], '-', np.array(y), np.array(yhat_single)), axis=None)
         res_eval.loc[count_eval] = res_row_eval

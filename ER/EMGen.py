@@ -152,7 +152,7 @@ L.loc[L['temp'].isin(trues['temp']), ['gold']] = 1
 #                          ltable=A, rtable=B, 
 #                          fk_ltable='ltable.id', fk_rtable='rtable.id')
 
-development_evaluation = em.split_train_test(L, train_proportion=0.7)
+development_evaluation = em.split_train_test(L, train_proportion=0.5)
 development = development_evaluation['train']
 evaluation = development_evaluation['test']
 
@@ -168,15 +168,25 @@ print("tagged pairs:" + str(exact['gold'].value_counts()))
 
 predictions = {}
 for m in matchers:
-    # ONLY TEST!
     temp = test_feature_vectors.copy()
     m.fit(table=train_feature_vectors,
           exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
           target_attr='gold')
-    predictions[m.get_name()] = m.predict(table=temp,
-                                          exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
-                                          append=True,
-                                          target_attr='predicted')
+    first = m.predict(table=temp,
+                      exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
+                      append=True,
+                      target_attr='predicted')
+    m.__init__(name=m.get_name())
+    temp = train_feature_vectors.copy()
+    m.fit(table=test_feature_vectors,
+          exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
+          target_attr='gold')
+    second = m.predict(table=temp,
+                       exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
+                       append=True,
+                       target_attr='predicted')
+    predictions[m.get_name()] = pd.concat([first, second])
+
 
 if not os.path.exists(path + 'deep'):
     os.makedirs(path + 'deep')
@@ -184,7 +194,7 @@ L['label'] = L['gold']
 L = L.drop(['Unnamed: 0', 'gold', 'temp'], axis=1)
 print(L.columns)
 dm.data.split(L, path + 'deep', 'train.csv', 'valid.csv', 'test.csv',
-              [3, 1, 1])
+              [1, 1, 1])
 train, validation, test = dm.data.process(
     path=path + 'deep',
     cache='train_cache.pth',
@@ -198,9 +208,23 @@ deepModel.run_train(
     train,
     validation,
     best_save_path='best_model.pth')
-print(deepModel.run_eval(test))
 unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/test.csv', trained_model=deepModel)
-predictions["deepMatcher"] = deepModel.run_prediction(unlabeled)
+first = deepModel.run_prediction(unlabeled)
+deepModel = dm.MatchingModel()
+deepModel.run_train(
+    validation,
+    test,
+    best_save_path='best_model.pth')
+unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/train.csv', trained_model=deepModel)
+second = deepModel.run_prediction(unlabeled)
+deepModel = dm.MatchingModel()
+deepModel.run_train(
+    test,
+    train,
+    best_save_path='best_model.pth')
+unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/validation.csv', trained_model=deepModel)
+third = deepModel.run_prediction(unlabeled)
+predictions["deepMatcher"] = pd.concat([first, second, third])
 print(predictions["deepMatcher"])
 
 df = pd.DataFrame(columns=['instance', 'candName', 'targName', 'conf', 'realConf'])

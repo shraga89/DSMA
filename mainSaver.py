@@ -21,7 +21,7 @@ from tensorflow.python.client import device_lib
 print(device_lib.list_local_devices())
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
-tf.Session(config=tf.ConfigProto(log_device_placement=True))
+# tf.Session(config=tf.ConfigProto(log_device_placement=True))
 config = tf.ConfigProto(log_device_placement=True)
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
