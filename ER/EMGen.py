@@ -2,9 +2,10 @@ import numpy as np
 import pandas as pd
 import py_entitymatching as em
 import networkx as nx
-import matplotlib.pyplot as plt
-import os.path
+# import matplotlib.pyplot as plt
+# import os.path
 import os
+from shutil import copyfile
 
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 path = './ds_with_exact/Structured/dblp_scholar_exp_data/exp_data/'
@@ -195,6 +196,15 @@ L = L.drop(['Unnamed: 0', 'gold', 'temp'], axis=1)
 print(L.columns)
 dm.data.split(L, path + 'deep', 'train.csv', 'valid.csv', 'test.csv',
               [1, 1, 1])
+temp = pd.read_csv(path + 'deep/train.csv')
+temp = temp.drop(['label'], axis=1)
+temp.to_csv(path + 'deep/unlabeled/train.csv')
+temp = pd.read_csv(path + 'deep/test.csv')
+temp = temp.drop(['label'], axis=1)
+temp.to_csv(path + 'deep/unlabeled/test.csv')
+temp = pd.read_csv(path + 'deep/valid.csv')
+temp = temp.drop(['label'], axis=1)
+temp.to_csv(path + 'deep/unlabeled/valid.csv')
 train, validation, test = dm.data.process(
     path=path + 'deep',
     cache='train_cache.pth',
@@ -222,7 +232,7 @@ deepModel.run_train(
     test,
     train,
     best_save_path='best_model.pth')
-unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/validation.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/valid.csv', trained_model=deepModel)
 third = deepModel.run_prediction(unlabeled)
 predictions["deepMatcher"] = pd.concat([first, second, third])
 print(predictions["deepMatcher"])
