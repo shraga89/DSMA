@@ -196,6 +196,8 @@ L = L.drop(['Unnamed: 0', 'gold', 'temp'], axis=1)
 print(L.columns)
 dm.data.split(L, path + 'deep', 'train.csv', 'valid.csv', 'test.csv',
               [1, 1, 1])
+if not os.path.exists(path + 'deep/unlabeled'):
+    os.makedirs(path + 'deep/unlabeled')
 temp = pd.read_csv(path + 'deep/train.csv')
 temp = temp.drop(['label'], axis=1)
 temp.to_csv(path + 'deep/unlabeled/train.csv')
