@@ -20,7 +20,8 @@ import keras
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 # tf.Session(config=tf.ConfigProto(log_device_placement=True))
-config = tf.ConfigProto(log_device_placement=True)
+gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
+config = tf.ConfigProto(log_device_placement=True, gpu_options=gpu_options)
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
 
