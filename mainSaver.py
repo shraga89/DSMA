@@ -114,7 +114,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
     res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'CRNN', X_seq, y_single,
                                                   crnn_model_eval, res_eval, count_eval)
 
-
+print("GPUS:")
 print(K.tensorflow_backend._get_available_gpus())
 E = 'f'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)

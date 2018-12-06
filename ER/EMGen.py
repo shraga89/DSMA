@@ -168,6 +168,7 @@ print("tagged pairs:" + str(exact['gold'].value_counts()))
 
 predictions = {}
 for m in matchers:
+    # ONLY TEST!
     temp = test_feature_vectors.copy()
     m.fit(table=train_feature_vectors,
           exclude_attrs=['_id', 'ltable_id', 'rtable_id', 'gold'],
@@ -198,7 +199,7 @@ deepModel.run_train(
     validation,
     best_save_path='best_model.pth')
 print(deepModel.run_eval(test))
-unlabeled = dm.data.process_unlabeled(path=path + '/test.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + 'deep' + '/test.csv', trained_model=deepModel)
 predictions["deepMatcher"] = deepModel.run_prediction(unlabeled)
 print(predictions["deepMatcher"])
 
