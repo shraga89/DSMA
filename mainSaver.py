@@ -26,9 +26,9 @@ os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
 # config = tf.ConfigProto(log_device_placement=True, gpu_options=gpu_options)
 # sess = tf.Session(config=config)
 # keras.backend.set_session(sess)
-config = tf.ConfigProto()
+config = tf.ConfigProto(device_count={'GPU': 2})
 config.gpu_options.allow_growth = True
-# config.gpu_options.per_process_gpu_memory_fraction = 0.4
+config.gpu_options.per_process_gpu_memory_fraction = 0.9
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
 
