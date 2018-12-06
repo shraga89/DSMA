@@ -17,8 +17,6 @@ import random
 import multiprocessing as mp
 import os
 import keras
-from tensorflow.python.client import device_lib
-print(device_lib.list_local_devices())
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 # tf.Session(config=tf.ConfigProto(log_device_placement=True))
@@ -120,7 +118,6 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
     res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'CRNN', X_seq, y_single,
                                                   crnn_model_eval, res_eval, count_eval)
 
-print("GPUS:")
 print(K.tensorflow_backend._get_available_gpus())
 E = 'f'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', False)
@@ -135,9 +132,11 @@ res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r'
 res_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'real_p', 'pred_p'])
 i = 1
 count_adapt, count_eval, count_adapt_eval = 0, 0, 0
-print(time.time())
+ts = time.time()
+st = datetime.datetime.fromtimestamp(ts).strftime('%d_%m_%Y_%H_%M')
+print(st)
 for train, test in kfold.split(keys):
-    print("Starting fold " + str(i) + ' ' + str(time.time()))
+    print("Starting fold " + str(i) + ' ' + str(st))
     K.get_session().close()
     K.set_session(tf.Session())
     K.get_session().run(tf.global_variables_initializer())
@@ -205,7 +204,7 @@ for train, test in kfold.split(keys):
     # pool.close()
     # pool = mp.Pool()
     for epoch in test:
-        print("Starting test fold " + str(i) + ' ' + str(time.time()))
+        print("Starting test fold " + str(i) + ' ' + str(st))
         if 'exact' in dh.inv_trans[epoch]:
             print('skipping Exact Match')
             continue
