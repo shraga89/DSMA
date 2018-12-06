@@ -18,7 +18,7 @@ import multiprocessing as mp
 import os
 import keras
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
-os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
+# os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
 # os.environ["CUDA_VISIBLE_DEVICES"]="1"
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 # tf.Session(config=tf.ConfigProto(log_device_placement=True))
