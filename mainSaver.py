@@ -24,7 +24,10 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # config = tf.ConfigProto(log_device_placement=True, gpu_options=gpu_options)
 # sess = tf.Session(config=config)
 # keras.backend.set_session(sess)
-
+config = tf.ConfigProto()
+config.gpu_options.allow_growth = True
+sess = tf.Session(config=config)
+keras.backend.set_session(sess)
 
 def model_worker_adapt(model, X, y, e, b, v):
     mat = X.reshape(X.shape[1:3])
