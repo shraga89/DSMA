@@ -222,6 +222,8 @@ deepModel.run_train(
     best_save_path='best_model.pth')
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/test.csv', trained_model=deepModel)
 first = deepModel.run_prediction(unlabeled)
+print(first)
+del deepModel
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     validation,
@@ -229,6 +231,8 @@ deepModel.run_train(
     best_save_path='best_model.pth')
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/train.csv', trained_model=deepModel)
 second = deepModel.run_prediction(unlabeled)
+print(second)
+del deepModel
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     test,
