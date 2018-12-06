@@ -22,7 +22,7 @@ print(device_lib.list_local_devices())
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 # tf.Session(config=tf.ConfigProto(log_device_placement=True))
-config = tf.ConfigProto(log_device_placement=True)
+config = tf.ConfigProto(log_device_placement=True, device_count={'CPU': 0, 'GPU': 2})
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
 
@@ -135,8 +135,9 @@ res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r'
 res_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'real_p', 'pred_p'])
 i = 1
 count_adapt, count_eval, count_adapt_eval = 0, 0, 0
+print(time.time())
 for train, test in kfold.split(keys):
-    print("Starting fold " + str(i))
+    print("Starting fold " + str(i) + ' ' + str(time.time()))
     K.get_session().close()
     K.set_session(tf.Session())
     K.get_session().run(tf.global_variables_initializer())
@@ -204,6 +205,7 @@ for train, test in kfold.split(keys):
     # pool.close()
     # pool = mp.Pool()
     for epoch in test:
+        print("Starting test fold " + str(i) + ' ' + str(time.time()))
         if 'exact' in dh.inv_trans[epoch]:
             print('skipping Exact Match')
             continue
