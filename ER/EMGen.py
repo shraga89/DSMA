@@ -215,6 +215,9 @@ train, validation, test = dm.data.process(
     test='test.csv',
     use_magellan_convention=True,
     ignore_columns=('ltable_id', 'rtable_id'))
+print(type(train))
+print(type(validation))
+print(type(test))
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     train,
