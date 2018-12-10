@@ -132,7 +132,7 @@ dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', False)
 dh.build_eval(False)
 dh.build_feat_dataset()
 kfold = KFold(5, True, 1)
-keys = np.array(list(dh.conf_dict.keys()))[:1500]
+keys = np.array(list(dh.conf_dict.keys()))[:]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
 res_adapt = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r', 'old_f', 'new_p', 'new_r', 'new_f'])
 res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r',
