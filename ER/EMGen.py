@@ -225,14 +225,6 @@ first = deepModel.run_prediction(unlabeled)
 # print(deepModel)
 print(first)
 del deepModel
-train, validation, test = dm.data.process(
-    path=path + 'deep',
-    cache='train_cache.pth',
-    train='train.csv',
-    validation='valid.csv',
-    test='test.csv',
-    use_magellan_convention=True,
-    ignore_columns=('ltable_id', 'rtable_id'))
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     validation,
@@ -242,14 +234,6 @@ unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/train.csv
 second = deepModel.run_prediction(unlabeled)
 print(second)
 del deepModel
-train, validation, test = dm.data.process(
-    path=path + 'deep',
-    cache='train_cache.pth',
-    train='train.csv',
-    validation='valid.csv',
-    test='test.csv',
-    use_magellan_convention=True,
-    ignore_columns=('ltable_id', 'rtable_id'))
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     test,
