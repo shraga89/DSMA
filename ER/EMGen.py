@@ -262,6 +262,7 @@ print(predictions["deepMatcher"])
 predictions["deepMatcher"] = pd.merge(predictions["deepMatcher"], L, how='inner', left_on=['_id'], right_on=['_id'])
 print(predictions["deepMatcher"])
 predictions["deepMatcher"]["predicted"] = predictions["deepMatcher"]["match_score"]
+print(predictions["deepMatcher"])
 
 df = pd.DataFrame(columns=['instance', 'candName', 'targName', 'conf', 'realConf'])
 epoch = 1
