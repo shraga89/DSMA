@@ -222,7 +222,7 @@ deepModel.run_train(
     best_save_path='best_model.pth')
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/test.csv', trained_model=deepModel)
 first = deepModel.run_prediction(unlabeled)
-print(deepModel)
+# print(deepModel)
 print(first)
 del deepModel
 train, validation, test = dm.data.process(
