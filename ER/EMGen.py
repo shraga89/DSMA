@@ -215,7 +215,6 @@ train, validation, test = dm.data.process(
     test='test.csv',
     use_magellan_convention=True,
     ignore_columns=('ltable_id', 'rtable_id'))
-
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     train,
@@ -226,24 +225,43 @@ first = deepModel.run_prediction(unlabeled)
 # print(deepModel)
 print(first)
 del deepModel
+train, validation, test = dm.data.process(
+    path=path + 'deep',
+    cache='train_cache.pth',
+    train='valid.csv',
+    validation='test.csv',
+    test='train.csv',
+    use_magellan_convention=True,
+    ignore_columns=('ltable_id', 'rtable_id'))
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     train,
-    test,
+    validation,
     best_save_path='best_model1.pth')
-unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/valid.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/train.csv', trained_model=deepModel)
 second = deepModel.run_prediction(unlabeled)
 print(second)
 del deepModel
+train, validation, test = dm.data.process(
+    path=path + 'deep',
+    cache='train_cache.pth',
+    train='test.csv',
+    validation='train.csv',
+    test='valid.csv',
+    use_magellan_convention=True,
+    ignore_columns=('ltable_id', 'rtable_id'))
 deepModel = dm.MatchingModel()
 deepModel.run_train(
-    test,
     train,
+    validation,
     best_save_path='best_model2.pth')
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/valid.csv', trained_model=deepModel)
 third = deepModel.run_prediction(unlabeled)
 predictions["deepMatcher"] = pd.concat([first, second, third])
 print(predictions["deepMatcher"])
+predictions["deepMatcher"] = pd.merge(predictions["deepMatcher"], L, how='inner', left_on=['_id'], right_on=['_id'])
+print(predictions["deepMatcher"])
+predictions["deepMatcher"]["predicted"] = predictions["deepMatcher"]["match_score"]
 
 df = pd.DataFrame(columns=['instance', 'candName', 'targName', 'conf', 'realConf'])
 epoch = 1
