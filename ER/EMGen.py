@@ -215,9 +215,7 @@ train, validation, test = dm.data.process(
     test='test.csv',
     use_magellan_convention=True,
     ignore_columns=('ltable_id', 'rtable_id'))
-print(type(train))
-print(type(validation))
-print(type(test))
+
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     train,
@@ -230,10 +228,10 @@ print(first)
 del deepModel
 deepModel = dm.MatchingModel()
 deepModel.run_train(
-    validation,
+    train,
     test,
     best_save_path='best_model1.pth')
-unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/train.csv', trained_model=deepModel)
+unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/valid.csv', trained_model=deepModel)
 second = deepModel.run_prediction(unlabeled)
 print(second)
 del deepModel
