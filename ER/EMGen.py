@@ -257,8 +257,11 @@ unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/valid.csv
 third = pd.DataFrame(deepModel.run_prediction(unlabeled))
 third['_id'] = third.index
 pred = pd.concat([pd.DataFrame(first), pd.DataFrame(second), pd.DataFrame(third)])
-predictions["deepMatcher"] = pd.merge(pred, exact, how='inner', left_on=['_id'], right_on=['_id'])
-predictions["deepMatcher"]["predicted"] = predictions["deepMatcher"]["match_score"]
+print(pred)
+pred = pd.concat([pred, L], axis=1, join='inner')
+print(pred)
+pred["predicted"] = pred["match_score"]
+predictions["deepMatcher"] = pred
 print(predictions["deepMatcher"])
 
 df = pd.DataFrame(columns=['instance', 'candName', 'targName', 'conf', 'realConf'])
