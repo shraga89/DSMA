@@ -193,7 +193,6 @@ if not os.path.exists(path + 'deep'):
     os.makedirs(path + 'deep')
 L['label'] = L['gold']
 L = L.drop(['Unnamed: 0', 'gold', 'temp'], axis=1)
-print(L.columns)
 dm.data.split(L, path + 'deep', 'train.csv', 'valid.csv', 'test.csv',
               [1, 1, 1])
 if not os.path.exists(path + 'deep/unlabeled'):
@@ -213,8 +212,7 @@ train, validation, test = dm.data.process(
     train='train.csv',
     validation='valid.csv',
     test='test.csv',
-    use_magellan_convention=True,
-    ignore_columns=('ltable_id', 'rtable_id'))
+    use_magellan_convention=True)
 deepModel = dm.MatchingModel()
 deepModel.run_train(
     train,
@@ -223,7 +221,7 @@ deepModel.run_train(
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/test.csv', trained_model=deepModel)
 first = pd.DataFrame(deepModel.run_prediction(unlabeled))
 first['_id'] = first.index
-print(pd.DataFrame(first).columns)
+print(first.columns)
 del deepModel
 train, validation, test = dm.data.process(
     path=path + 'deep',
@@ -241,7 +239,6 @@ deepModel.run_train(
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/train.csv', trained_model=deepModel)
 second = pd.DataFrame(deepModel.run_prediction(unlabeled))
 second['_id'] = second.index
-print(pd.DataFrame(second).columns)
 del deepModel
 train, validation, test = dm.data.process(
     path=path + 'deep',
@@ -259,11 +256,8 @@ deepModel.run_train(
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/valid.csv', trained_model=deepModel)
 third = pd.DataFrame(deepModel.run_prediction(unlabeled))
 third['_id'] = third.index
-print(pd.DataFrame(third).columns)
-predictions["deepMatcher"] = pd.concat([pd.DataFrame(first), pd.DataFrame(second), pd.DataFrame(third)])
-print(predictions["deepMatcher"])
-predictions["deepMatcher"] = pd.merge(predictions["deepMatcher"], L, how='inner', left_on=['_id'], right_on=['_id'])
-print(predictions["deepMatcher"])
+pred = pd.concat([pd.DataFrame(first), pd.DataFrame(second), pd.DataFrame(third)])
+predictions["deepMatcher"] = pd.merge(pred, exact, how='inner', left_on=['_id'], right_on=['_id'])
 predictions["deepMatcher"]["predicted"] = predictions["deepMatcher"]["match_score"]
 print(predictions["deepMatcher"])
 
