@@ -221,8 +221,8 @@ deepModel.run_train(
     validation,
     best_save_path='best_model.pth')
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/test.csv', trained_model=deepModel)
-first = deepModel.run_prediction(unlabeled)
-# print(deepModel)
+first = pd.DataFrame(deepModel.run_prediction(unlabeled))
+first['_id'] = first.index
 print(pd.DataFrame(first).columns)
 del deepModel
 train, validation, test = dm.data.process(
@@ -239,8 +239,9 @@ deepModel.run_train(
     validation,
     best_save_path='best_model1.pth')
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/train.csv', trained_model=deepModel)
-second = deepModel.run_prediction(unlabeled)
-print(second)
+second = pd.DataFrame(deepModel.run_prediction(unlabeled))
+second['_id'] = second.index
+print(pd.DataFrame(second).columns)
 del deepModel
 train, validation, test = dm.data.process(
     path=path + 'deep',
@@ -256,7 +257,9 @@ deepModel.run_train(
     validation,
     best_save_path='best_model2.pth')
 unlabeled = dm.data.process_unlabeled(path=path + 'deep/unlabeled' + '/valid.csv', trained_model=deepModel)
-third = deepModel.run_prediction(unlabeled)
+third = pd.DataFrame(deepModel.run_prediction(unlabeled))
+third['_id'] = third.index
+print(pd.DataFrame(third).columns)
 predictions["deepMatcher"] = pd.concat([pd.DataFrame(first), pd.DataFrame(second), pd.DataFrame(third)])
 print(predictions["deepMatcher"])
 predictions["deepMatcher"] = pd.merge(predictions["deepMatcher"], L, how='inner', left_on=['_id'], right_on=['_id'])
