@@ -19,7 +19,7 @@ import os
 import keras
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
-# os.environ["CUDA_VISIBLE_DEVICES"]="1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "0, 1"
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 # tf.Session(config=tf.ConfigProto(log_device_placement=True))
 # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
@@ -28,7 +28,7 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # keras.backend.set_session(sess)
 config = tf.ConfigProto(device_count={'GPU': 2})
 config.gpu_options.allow_growth = True
-config.gpu_options.per_process_gpu_memory_fraction = 0.9
+# config.gpu_options.per_process_gpu_memory_fraction = 0.9
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
 
@@ -127,12 +127,12 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
                                                   crnn_model_eval, res_eval, count_eval)
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'f'
-dh = DH.DataHandler('../VectorsOAEI.csv', '../_matrix.csv', False)
+E = 'r'
+dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)
 dh.build_eval(False)
 dh.build_feat_dataset()
 kfold = KFold(5, True, 1)
-keys = np.array(list(dh.conf_dict.keys()))[:]
+keys = np.array(list(dh.conf_dict.keys()))[:1500]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
 res_adapt = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r', 'old_f', 'new_p', 'new_r', 'new_f'])
 res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r',
