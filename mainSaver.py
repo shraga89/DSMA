@@ -144,6 +144,8 @@ ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%d_%m_%Y_%H_%M')
 print(st)
 for train, test in kfold.split(keys):
+    ts = time.time()
+    st = datetime.datetime.fromtimestamp(ts).strftime('%d_%m_%Y_%H_%M')
     print("Starting fold " + str(i) + ' ' + str(st))
     K.get_session().close()
     K.set_session(tf.Session())
@@ -212,6 +214,8 @@ for train, test in kfold.split(keys):
     # pool.close()
     # pool = mp.Pool()
     for epoch in test:
+        ts = time.time()
+        st = datetime.datetime.fromtimestamp(ts).strftime('%d_%m_%Y_%H_%M')
         print("Starting test fold " + str(i) + ' ' + str(st))
         if 'exact' in dh.inv_trans[epoch]:
             print('skipping Exact Match')
