@@ -127,10 +127,12 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
                                                   crnn_model_eval, res_eval, count_eval)
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'p'
-dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', False)
+E = 'f'
+dataset = 'WebForms'
+dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)
 dh.build_eval(False)
 dh.build_feat_dataset()
+# print(dh.conf_dict)
 kfold = KFold(5, True, 1)
 keys = np.array(list(dh.conf_dict.keys()))[:]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
@@ -392,7 +394,7 @@ for train, test in kfold.split(keys):
     i += 1
 ts = time.time()
 st = datetime.datetime.fromtimestamp(ts).strftime('%d_%m_%Y_%H_%M')
-folder = './results/' + st
+folder = './results/' + st + '_' + dataset + '_' + E
 if not os.path.exists(folder):
     os.makedirs(folder)
 res_adapt.to_csv(folder + '/adapt.csv')
