@@ -42,7 +42,7 @@ def model_worker_adapt(model, X, y, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    for _ in range(1):
+    for _ in range(4):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -127,19 +127,19 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
                                                   crnn_model_eval, res_eval, count_eval)
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'cos'
+E = 'f'
 dataset = 'WebForms'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)
 dh.build_eval(False)
 dh.build_feat_dataset()
 # print(dh.conf_dict)
 kfold = KFold(5, True, 1)
-keys = np.array(list(dh.conf_dict.keys()))[:]
+keys = np.array(list(dh.conf_dict.keys()))[:1500]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
 res_adapt = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r', 'old_f', 'new_p', 'new_r', 'new_f'])
 res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r',
                                        'old_f', 'new_p', 'new_r', 'new_f', 'real_e', 'pred_e'])
-res_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'real_p', 'pred_p'])
+res_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'real_p', 'pred_p', 'sum'])
 i = 1
 count_adapt, count_eval, count_adapt_eval = 0, 0, 0
 ts = time.time()

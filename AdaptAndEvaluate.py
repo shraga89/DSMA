@@ -457,7 +457,7 @@ def bpr_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
 def only_deep_evaluate(instance, _type, X, y, evaluator, res_eval, count_eval):
     yhat_single = evaluator.predict(X, verbose=2)
     res_row_eval = np.concatenate(
-        (instance, _type, '-', np.array(y), np.array(yhat_single)), axis=None)
+        (instance, _type, '-', np.array(y), np.array(yhat_single), np.array(np.sum(X))), axis=None)
     res_eval.loc[count_eval] = res_row_eval
     count_eval += 1
     return res_eval, count_eval
@@ -481,7 +481,7 @@ def only_reg_evaluate(instance, _type, X, y, evaluators, res_eval, count_eval):
     for clf in evaluators:
         yhat_single = clf[1].predict(X=np.nan_to_num(X))
         res_row_eval = np.concatenate(
-            (instance, _type + clf[0], '-', np.array(y), np.array(yhat_single)), axis=None)
+            (instance, _type + clf[0], '-', np.array(y), np.array(yhat_single), np.array([])), axis=None)
         res_eval.loc[count_eval] = res_row_eval
         count_eval += 1
     return res_eval, count_eval
