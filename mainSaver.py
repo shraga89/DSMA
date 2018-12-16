@@ -127,7 +127,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
                                                   crnn_model_eval, res_eval, count_eval)
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'p'
+E = 'f'
 dataset = 'WebForms'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)
 dh.build_eval(False)
