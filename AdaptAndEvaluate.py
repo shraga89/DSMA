@@ -57,6 +57,46 @@ def deep_adapt_and_evaluate(instance, _type, adaptor, is_adaptor_mat, evaluator,
     return res_adapt_eval, count_adapt_eval
 
 
+def deep_adapt_and_evaluate_multi(instance, _type, multi, X_seq, y, y_single, res_adapt_eval, count_adapt_eval):
+    predicted = multi.predict(X_seq, verbose=2)
+    yhat_full = predicted[0]
+    yhat_full = np.where(yhat_full < 0.5, 0.0, 1.0)
+    yhat_full = np.array(yhat_full.reshape(yhat_full.shape[1:-1] + (1,)))
+    yhat_single = predicted[1]
+    k_adapt = 0
+    res_row_adapt = np.concatenate((instance, _type, str(k_adapt),
+                                    precision_recall_fscore_support(y,
+                                                                    np.ceil(np.array(X_seq.reshape(yhat_full.shape))),
+                                                                    average='macro')[:3],
+                                    precision_recall_fscore_support(y, yhat_full, average='macro')[:3],
+                                    np.array(y_single), np.array(yhat_single)), axis=None)
+    res_adapt_eval.loc[count_adapt_eval] = res_row_adapt
+    count_adapt_eval += 1
+    k_adapt += 1
+    yhat_full = np.array(yhat_full.reshape((1,) + yhat_full.shape))
+    predicted = multi.predict(yhat_full, verbose=2)
+    yhat_new = predicted[1]
+    while yhat_new > yhat_single:
+        X_seq = yhat_full
+        predicted = multi.predict(X_seq, verbose=2)
+        yhat_full = predicted[0]
+        yhat_full = np.where(yhat_full < 0.5, 0.0, 1.0)
+        yhat_full = np.array(yhat_full.reshape(yhat_full.shape[1:-1] + (1,)))
+        yhat_single = yhat_new
+        res_row_adapt = np.concatenate((instance, _type, str(k_adapt),
+                                        precision_recall_fscore_support(y,
+                                                                        np.ceil(
+                                                                            np.array(X_seq.reshape(yhat_full.shape))),
+                                                                        average='macro')[:3],
+                                        precision_recall_fscore_support(y, yhat_full, average='macro')[:3],
+                                        np.array(y_single), np.array(yhat_single)), axis=None)
+        res_adapt_eval.loc[count_adapt_eval] = res_row_adapt
+        count_adapt_eval += 1
+        k_adapt += 1
+        yhat_new = predicted[1]
+    return res_adapt_eval, count_adapt_eval
+
+
 def deep_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, matM, X_f, y, y_single, res_adapt_eval,
                                 count_adapt_eval):
     X_orig = X
@@ -454,10 +494,20 @@ def bpr_adapt_and_reg_evaluate(instance, _type, adaptor, evaluators, X, matN, ma
     return res_adapt_eval, count_adapt_eval
 
 
-def only_deep_evaluate(instance, _type, X, y, evaluator, res_eval, count_eval):
+def only_deep_evaluate(instance, _type, X, y, evaluator, res_eval, count_eval, cos):
     yhat_single = evaluator.predict(X, verbose=2)
     res_row_eval = np.concatenate(
-        (instance, _type, '-', np.array(y), np.array(yhat_single), np.array(np.sum(X))), axis=None)
+        (instance, _type, '-', np.array(y), np.array(yhat_single), np.array(np.sum(X)), np.array(cos)), axis=None)
+    res_eval.loc[count_eval] = res_row_eval
+    count_eval += 1
+    return res_eval, count_eval
+
+
+def only_deep_evaluate_multi(instance, _type, X, y, evaluator, res_eval, count_eval, cos):
+    # print(evaluator.predict(X, verbose=2))
+    yhat_single = evaluator.predict(X, verbose=2)[1]
+    res_row_eval = np.concatenate(
+        (instance, _type, '-', np.array(y), np.array(yhat_single), np.array(np.sum(X)), np.array(cos)), axis=None)
     res_eval.loc[count_eval] = res_row_eval
     count_eval += 1
     return res_eval, count_eval
@@ -478,6 +528,7 @@ def only_deep_adapt(instance, _type, X, y, adaptor, res_adapt, count_adapt):
 
 
 def only_deep_adapt_multi(instance, _type, X, y, adaptor, res_adapt, count_adapt):
+    # print(adaptor.predict(X, verbose=2))
     yhat_full = adaptor.predict(X, verbose=2)[0]
     yhat_full = np.where(yhat_full < 0.5, 0.0, 1.0)
     yhat_full = np.array(yhat_full.reshape(yhat_full.shape[1:-1] + (1,)))
@@ -496,7 +547,7 @@ def only_reg_evaluate(instance, _type, X, y, evaluators, res_eval, count_eval):
     for clf in evaluators:
         yhat_single = clf[1].predict(X=np.nan_to_num(X))
         res_row_eval = np.concatenate(
-            (instance, _type + clf[0], '-', np.array(y), np.array(yhat_single), np.array([])), axis=None)
+            (instance, _type + clf[0], '-', np.array(y), np.array(yhat_single), np.array([0.0]), np.array([0.0])), axis=None)
         res_eval.loc[count_eval] = res_row_eval
         count_eval += 1
     return res_eval, count_eval
