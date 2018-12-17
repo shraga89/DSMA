@@ -141,4 +141,4 @@ class DataHandler:
                     self.conf_dict[k] = np.append(self.conf_dict[k], np.array(random_1()))
                 else:
                     self.conf_dict[k] = np.append(self.conf_dict[k], np.array(random_0()))
-            self.conf_dict[k] = np.where(self.conf_dict[k] < 0.15, self.conf_dict[k], 0.0)
+            self.conf_dict[k] = np.where(self.conf_dict[k] > 0.15, self.conf_dict[k], 0.0)

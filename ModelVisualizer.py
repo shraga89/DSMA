@@ -15,10 +15,10 @@ class ModelVisualizer:
         orig = self.dh.conf_dict_mat[matId][0].reshape(self.dh.matN[matId], self.dh.matM[matId])
         plt.imshow(orig, interpolation="nearest", cmap="gray")
         plt.savefig('./figures/' + _type + '_' + str(matId) + '_orig_GRU.jpg', bbox_inches='tight', format='jpg')
-        cn = self.model.layers[0].get_weights()[0].reshape(3, 32)
+        cn = self.model.layers[0].get_weights()[9].reshape(3, 32)
         plt.imshow(cn, interpolation="nearest", cmap="gray")
         plt.savefig('./figures/' + _type + '_' + str(matId) + '_filter_GRU.jpg', bbox_inches='tight', format='jpg')
-        gruout1_f = K.function([self.model.layers[0].input], [self.model.layers[1].output])
+        gruout1_f = K.function([self.model.layers[8].input], [self.model.layers[9].output])
         if eval:
             new_mat = gruout1_f([self.dh.conf_dict_seq[matId]])[0].reshape(self.dh.matN[matId], self.dh.matM[matId])
         else:

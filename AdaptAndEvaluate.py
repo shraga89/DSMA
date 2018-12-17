@@ -477,6 +477,21 @@ def only_deep_adapt(instance, _type, X, y, adaptor, res_adapt, count_adapt):
     return res_adapt, count_adapt
 
 
+def only_deep_adapt_multi(instance, _type, X, y, adaptor, res_adapt, count_adapt):
+    yhat_full = adaptor.predict(X, verbose=2)[0]
+    yhat_full = np.where(yhat_full < 0.5, 0.0, 1.0)
+    yhat_full = np.array(yhat_full.reshape(yhat_full.shape[1:-1] + (1,)))
+    k_adapt = 0
+    res_row_adapt = np.concatenate((instance, _type, str(k_adapt),
+                                    precision_recall_fscore_support(y, np.ceil(np.array(X.reshape(yhat_full.shape))),
+                                                                    average='macro')[:3],
+                                    precision_recall_fscore_support(y, yhat_full, average='macro')[:3]),
+                                   axis=None)
+    res_adapt.loc[count_adapt] = res_row_adapt
+    count_adapt += 1
+    return res_adapt, count_adapt
+
+
 def only_reg_evaluate(instance, _type, X, y, evaluators, res_eval, count_eval):
     for clf in evaluators:
         yhat_single = clf[1].predict(X=np.nan_to_num(X))

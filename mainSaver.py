@@ -5,6 +5,7 @@ import DeepEvaluator as DE
 import ModelVisualizer as MV
 import AdaptAndEvaluate as AnE
 import FeatureBasedEvaluator as FBE
+import MultiTaskNet as MTN
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
@@ -92,8 +93,43 @@ def model_worker_eval(model, X, y, e, b, v):
     return model
 
 
+def model_worker_multi(model, X, y_full, y_reg, e, b, v):
+    mat = X.reshape(X.shape[1:3])
+    exMat = y_full.reshape(y_full.shape[1:3])
+    X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
+    y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
+    model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
+    X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
+    y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
+    model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
+    for _ in range(4):
+        i = random.randint(0, mat.shape[0] - 1)
+        j = random.randint(0, mat.shape[0] - 1)
+        mat_i = mat[i]
+        mat[i] = mat[j]
+        mat[j] = mat_i
+        exMat_i = exMat[i]
+        exMat[i] = exMat[j]
+        exMat[j] = exMat_i
+        X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
+        y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
+        model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
+        i = random.randint(0, mat.shape[1] - 1)
+        j = random.randint(0, mat.shape[1] - 1)
+        mat_i = mat[:, i]
+        mat[:, i] = mat[:, j]
+        mat[:, j] = mat_i
+        exMat_i = exMat[:, i]
+        exMat[:, i] = exMat[:, j]
+        exMat[:, j] = exMat_i
+        X_seq = mat.reshape(1, mat.shape[0] * mat.shape[1], 1)
+        y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
+        model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
+    return model
+
+
 def adapt_worker(dh, X_seq, X_mat, y_seq, matM, matN, ir, svd, bpr,
-                 gru_model_adapt, cnn_model_adapt, dnn_model_adapt, crnn_model_adapt):
+                 gru_model_adapt, cnn_model_adapt, dnn_model_adapt, crnn_model_adapt, multi_model):
     global res_adapt, count_adapt
     res_adapt, count_adapt = AnE.reg_adapt_ir(np.array(dh.inv_trans[epoch]), 'IR', X_seq, y_seq, ir,
                                               res_adapt, count_adapt)
@@ -110,6 +146,8 @@ def adapt_worker(dh, X_seq, X_mat, y_seq, matM, matN, ir, svd, bpr,
                                                  dnn_model_adapt, res_adapt, count_adapt)
     res_adapt, count_adapt = AnE.only_deep_adapt(np.array(dh.inv_trans[epoch]), 'CRNN', X_seq, y_seq,
                                                  crnn_model_adapt, res_adapt, count_adapt)
+    res_adapt, count_adapt = AnE.only_deep_adapt_multi(np.array(dh.inv_trans[epoch]), 'MULTI', X_seq, y_seq,
+                                                 multi_model, res_adapt, count_adapt)
 
 
 def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn_model_eval, crnn_model_eval):
@@ -127,7 +165,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
                                                   crnn_model_eval, res_eval, count_eval)
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'cos'
+E = 'f'
 dataset = 'WebForms'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)
 dh.build_eval(False)
@@ -162,6 +200,7 @@ for train, test in kfold.split(keys):
     dnn_model_eval = DE.build_dnn(64)
     crnn_model_adapt = DA.build_cnn_gru(16)
     crnn_model_eval = DE.build_cnn_gru(16)
+    # multi_model = MTN.build_multi(32)
 
     ir = BA.build_ir()
     svd = BA.build_svdpp()
@@ -184,6 +223,8 @@ for train, test in kfold.split(keys):
         crnn_model_eval = model_worker_eval(crnn_model_eval, X_mat, y_single, 1, 1, 2)
         cnn_2d_model_eval.fit(X_mat, y_single, epochs=1, batch_size=1, verbose=2)
 
+        # multi_model = model_worker_multi(multi_model, X_mat, y_mat, y_single, 1, 1, 2)
+
         # REG ADAPT
         ir.fit(X_seq.reshape(X_seq.shape[1]), y_seq.reshape(y_seq.shape[1]))
 
@@ -193,9 +234,9 @@ for train, test in kfold.split(keys):
         for clf in FBE.classifiers:
             clf[1].fit(X_feat, y_single)
 
-    # mv_adapt = MV.ModelVisualizer(gru_model_adapt, dh)
+    # mv_adapt = MV.ModelVisualizer(crnn_model_eval, dh)
     # mv_adapt.visualize_gru(1, False)
-    # mv_eval = MV.ModelVisualizer(gru_model_eval, dh)
+    # mv_eval = MV.ModelVisualizer(crnn_model_eval, dh)
     # mv_eval.visualize_gru(1, True)
     # mv_eval_cnn = MV.ModelVisualizer(cnn_2d_model_eval, dh)
     # mv_eval_cnn.visualize_cnn(1, True)
@@ -205,14 +246,14 @@ for train, test in kfold.split(keys):
     # mv_eval.visualize_gru(0, True)
     # mv_eval_cnn = MV.ModelVisualizer(cnn_2d_model_eval, dh)
     # mv_eval_cnn.visualize_cnn(0, True)
-    DH.data_saver(gru_model_adapt, "./models/gru_adapt_no_attention_model_fold_" + str(i))
-    DH.data_saver(cnn_model_adapt, "./models/cnn_adapt_no_attention_model_fold_" + str(i))
-    DH.data_saver(dnn_model_adapt, "./models/dnn_adapt_no_attention_model_fold_" + str(i))
-    DH.data_saver(crnn_model_adapt, "./models/crnn_adapt_no_attention_model_fold_" + str(i))
-    DH.data_saver(gru_model_eval, "./models/gru_eval_model_fold_" + str(i))
-    DH.data_saver(cnn_model_eval, "./models/cnn_eval_model_fold_" + str(i))
-    DH.data_saver(dnn_model_eval, "./models/dnn_eval_model_fold_" + str(i))
-    DH.data_saver(crnn_model_eval, "./models/crnn_eval_model_fold_" + str(i))
+    # DH.data_saver(gru_model_adapt, "./models/gru_adapt_no_attention_model_fold_" + str(i))
+    # DH.data_saver(cnn_model_adapt, "./models/cnn_adapt_no_attention_model_fold_" + str(i))
+    # DH.data_saver(dnn_model_adapt, "./models/dnn_adapt_no_attention_model_fold_" + str(i))
+    # DH.data_saver(crnn_model_adapt, "./models/" + st + "_crnn_adapt_no_attention_model_fold_" + str(i))
+    # DH.data_saver(gru_model_eval, "./models/gru_eval_model_fold_" + str(i))
+    # DH.data_saver(cnn_model_eval, "./models/cnn_eval_model_fold_" + str(i))
+    # DH.data_saver(dnn_model_eval, "./models/dnn_eval_model_fold_" + str(i))
+    # DH.data_saver(crnn_model_eval, "./models/" + st + "_crnn_eval_model_fold_" + str(i))
     # pool.close()
     # pool = mp.Pool()
     for epoch in test:
@@ -233,9 +274,11 @@ for train, test in kfold.split(keys):
         matM = dh.matM[epoch]
 
         adapt_worker(dh, X_seq, X_mat, y_seq, matM, matN, ir, svd, bpr,
-                     gru_model_adapt, cnn_model_adapt, dnn_model_adapt, crnn_model_adapt)
+                     gru_model_adapt, cnn_model_adapt, dnn_model_adapt, crnn_model_adapt, multi_model)
 
-        eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn_model_eval, crnn_model_eval)
+        eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn_model_eval, crnn_model_eval, multi_model)
+
+
 
         # GRU_GRU
         res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
@@ -265,7 +308,7 @@ for train, test in kfold.split(keys):
                                                                        X_mat, y_seq, y_single, res_adapt_eval,
                                                                        count_adapt_eval)
 
-        # GRU_CNN
+        GRU_CNN
         res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
                                                                        'GRU_CNN', gru_model_adapt,
                                                                        False, cnn_model_eval, False, X_seq,
