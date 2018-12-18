@@ -163,11 +163,11 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
     #                                               cnn_model_eval, res_eval, count_eval)
     cos_val = dh.fullMat_dict[epoch]['cos']
     res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'DNN', X_seq, y_single,
-                                                  dnn_model_eval, cos_val, res_eval, count_eval)
+                                                  dnn_model_eval, res_eval, count_eval, cos_val)
     res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'CRNN', X_seq, y_single,
-                                                  crnn_model_eval, cos_val, res_eval, count_eval)
+                                                  crnn_model_eval, res_eval, count_eval, cos_val)
     res_eval, count_eval = AnE.only_deep_evaluate_multi(np.array(dh.inv_trans[epoch]), 'MULTI', X_seq, y_single,
-                                                        multi_model, cos_val, res_eval, count_eval)
+                                                        multi_model, res_eval, count_eval, cos_val)
 
 
 print(K.tensorflow_backend._get_available_gpus())
