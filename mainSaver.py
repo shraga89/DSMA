@@ -31,7 +31,7 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 config = tf.ConfigProto(device_count={'GPU': 2, 'CPU': 12})
 config.gpu_options.allow_growth = True
 config.gpu_options.per_process_gpu_memory_fraction = 0.95
-config.allow_soft_placement=True
+config.allow_soft_placement = True
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
 
@@ -172,7 +172,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'p'
+E = 'r'
 dataset = 'WF'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', False)
 dh.build_eval(False)
