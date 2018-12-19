@@ -21,7 +21,7 @@ import keras
 
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
-os.environ["CUDA_VISIBLE_DEVICES"] = "0, 1"
+# os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 # tf.Session(config=tf.ConfigProto(log_device_placement=True))
 # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
@@ -30,7 +30,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0, 1"
 # keras.backend.set_session(sess)
 config = tf.ConfigProto(device_count={'GPU': 2})
 config.gpu_options.allow_growth = True
-# config.gpu_options.per_process_gpu_memory_fraction = 0.9
+config.gpu_options.per_process_gpu_memory_fraction = 0.95
+config.allow_soft_placement = True
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
 
