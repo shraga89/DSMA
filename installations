@@ -1,4 +1,4 @@
 1. Anaconda 3
-2. tensorflow
+2. tensorflow (or tensorflow-gpu)
 3. keras
 4. surprise
