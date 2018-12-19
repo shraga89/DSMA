@@ -31,7 +31,7 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 config = tf.ConfigProto(device_count={'GPU': 2})
 config.gpu_options.allow_growth = True
 config.gpu_options.per_process_gpu_memory_fraction = 0.95
-config.allow_soft_placement = True
+config.allow_soft_placement=True
 sess = tf.Session(config=config)
 keras.backend.set_session(sess)
 
@@ -45,7 +45,7 @@ def model_worker_adapt(model, X, y, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    for _ in range(5):
+    for _ in range(15):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -77,7 +77,7 @@ def model_worker_eval(model, X, y, e, b, v):
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
-    for _ in range(5):
+    for _ in range(15):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -104,7 +104,7 @@ def model_worker_multi(model, X, y_full, y_reg, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
-    for _ in range(5):
+    for _ in range(15):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -140,10 +140,10 @@ def adapt_worker(dh, X_seq, X_mat, y_seq, matM, matN, ir, svd, bpr,
     res_adapt, count_adapt = AnE.reg_adapt_bpr(np.array(dh.inv_trans[epoch]), 'BPR', X_mat, X_seq, y_seq, bpr,
                                                res_adapt, count_adapt)
 
-    res_adapt, count_adapt = AnE.only_deep_adapt(np.array(dh.inv_trans[epoch]), 'GRU', X_seq, y_seq,
-                                                 gru_model_adapt, res_adapt, count_adapt)
-    res_adapt, count_adapt = AnE.only_deep_adapt(np.array(dh.inv_trans[epoch]), 'CNN', X_seq, y_seq,
-                                                 cnn_model_adapt, res_adapt, count_adapt)
+    # res_adapt, count_adapt = AnE.only_deep_adapt(np.array(dh.inv_trans[epoch]), 'GRU', X_seq, y_seq,
+    #                                              gru_model_adapt, res_adapt, count_adapt)
+    # res_adapt, count_adapt = AnE.only_deep_adapt(np.array(dh.inv_trans[epoch]), 'CNN', X_seq, y_seq,
+    #                                              cnn_model_adapt, res_adapt, count_adapt)
     res_adapt, count_adapt = AnE.only_deep_adapt(np.array(dh.inv_trans[epoch]), 'DNN', X_seq, y_seq,
                                                  dnn_model_adapt, res_adapt, count_adapt)
     res_adapt, count_adapt = AnE.only_deep_adapt(np.array(dh.inv_trans[epoch]), 'CRNN', X_seq, y_seq,
@@ -158,10 +158,10 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
     res_eval, count_eval = AnE.only_reg_evaluate(np.array(dh.inv_trans[epoch]), 'FeatureBased_', X_feat, y_single,
                                                  FBE.classifiers, res_eval, count_eval)
 
-    res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'GRU', X_seq, y_single,
-                                                  gru_model_eval, res_eval, count_eval)
-    res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'CNN', X_seq, y_single,
-                                                  cnn_model_eval, res_eval, count_eval)
+    # res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'GRU', X_seq, y_single,
+    #                                               gru_model_eval, res_eval, count_eval)
+    # res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'CNN', X_seq, y_single,
+    #                                               cnn_model_eval, res_eval, count_eval)
     cos_val = dh.fullMat_dict[epoch]['cos']
     res_eval, count_eval = AnE.only_deep_evaluate(np.array(dh.inv_trans[epoch]), 'DNN', X_seq, y_single,
                                                   dnn_model_eval, res_eval, count_eval, cos_val)
@@ -172,14 +172,14 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'p'
-dataset = 'WF'
-dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', False)
+E = 'f'
+dataset = 'TH'
+dh = DH.DataHandler('../VectorsTH.csv', '../_matrix.csv', False)
 dh.build_eval(False)
 dh.build_feat_dataset()
 # print(dh.conf_dict)
 kfold = KFold(5, True, 1)
-keys = np.array(list(dh.conf_dict.keys()))[:1000]
+keys = np.array(list(dh.conf_dict.keys()))[:]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
 res_adapt = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r', 'old_f', 'new_p', 'new_r', 'new_f'])
 res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r',
@@ -287,25 +287,25 @@ for train, test in kfold.split(keys):
                     multi_model)
 
         # GRU_GRU
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'GRU_GRU', gru_model_adapt,
-                                                                       False, gru_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single,
-                                                                       res_adapt_eval, count_adapt_eval)
-
-        # CNN_CNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'CNN_CNN', cnn_model_adapt,
-                                                                       False, cnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single,
-                                                                       res_adapt_eval, count_adapt_eval)
-
-        # DNN_DNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'DNN_DNN', dnn_model_adapt,
-                                                                       False, dnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'GRU_GRU', gru_model_adapt,
+        #                                                                False, gru_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single,
+        #                                                                res_adapt_eval, count_adapt_eval)
+        #
+        # # CNN_CNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'CNN_CNN', cnn_model_adapt,
+        #                                                                False, cnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single,
+        #                                                                res_adapt_eval, count_adapt_eval)
+        #
+        # # DNN_DNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'DNN_DNN', dnn_model_adapt,
+        #                                                                False, dnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
 
         # CRNN_CRNN
         res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
@@ -320,130 +320,130 @@ for train, test in kfold.split(keys):
                                                                        count_adapt_eval)
 
         # GRU_CNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'GRU_CNN', gru_model_adapt,
-                                                                       False, cnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # GRU_DNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'GRU_DNN', gru_model_adapt,
-                                                                       False, dnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # GRU_CRNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'GRU_CRNN', gru_model_adapt,
-                                                                       False, crnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # CNN_GRU
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'CNN_GRU', cnn_model_adapt,
-                                                                       False, gru_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # CNN_DNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'CNN_DNN', cnn_model_adapt,
-                                                                       False, dnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # CNN_CRNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'CNN_CRNN', cnn_model_adapt,
-                                                                       False, crnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # DNN_GRU
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'DNN_GRU', dnn_model_adapt,
-                                                                       False, gru_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # DNN_CNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'DNN_CNN', dnn_model_adapt,
-                                                                       False, cnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # DNN_CRNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'DNN_CRNN', dnn_model_adapt,
-                                                                       False, crnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # CRNN_GRU
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'CRNN_GRU', crnn_model_adapt,
-                                                                       False, gru_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # CRNN_CNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'CRNN_CNN', crnn_model_adapt,
-                                                                       False, cnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        # CRNN_DNN
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                       'DNN_CRNN', crnn_model_adapt,
-                                                                       False, dnn_model_eval, False, X_seq,
-                                                                       X_mat, y_seq, y_single, res_adapt_eval,
-                                                                       count_adapt_eval)
-
-        res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                           'GRU_FEAT', gru_model_adapt,
-                                                                           FBE.classifiers, X_seq, matN, matM, X_feat,
-                                                                           y_seq, y_single, res_adapt_eval,
-                                                                           count_adapt_eval)
-
-        res_adapt_eval, count_adapt_eval = AnE.ir_adapt_and_deep_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                          'IR_GRU', ir,
-                                                                          gru_model_eval, X_seq,
-                                                                          y_seq, y_single, res_adapt_eval,
-                                                                          count_adapt_eval)
-
-        res_adapt_eval, count_adapt_eval = AnE.svd_adapt_and_deep_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                           'SVD_GRU', svd,
-                                                                           gru_model_eval, X_seq, matN, matM,
-                                                                           y_seq, y_single, res_adapt_eval,
-                                                                           count_adapt_eval)
-
-        res_adapt_eval, count_adapt_eval = AnE.bpr_adapt_and_deep_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                           'BPR_GRU', bpr,
-                                                                           gru_model_eval, X_seq, matN, matM,
-                                                                           y_seq, y_single, res_adapt_eval,
-                                                                           count_adapt_eval)
-
-        res_adapt_eval, count_adapt_eval = AnE.ir_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                         'IR_FEAT', ir,
-                                                                         FBE.classifiers, X_seq, matN, matM, X_feat,
-                                                                         y_seq, y_single, res_adapt_eval,
-                                                                         count_adapt_eval)
-
-        res_adapt_eval, count_adapt_eval = AnE.svd_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                          'SVD_FEAT', svd,
-                                                                          FBE.classifiers, X_seq, matN, matM, X_feat,
-                                                                          y_seq, y_single, res_adapt_eval,
-                                                                          count_adapt_eval)
-
-        res_adapt_eval, count_adapt_eval = AnE.bpr_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
-                                                                          'BPR_FEAT', bpr,
-                                                                          FBE.classifiers, X_seq, matN, matM, X_feat,
-                                                                          y_seq, y_single, res_adapt_eval,
-                                                                          count_adapt_eval)
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'GRU_CNN', gru_model_adapt,
+        #                                                                False, cnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # GRU_DNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'GRU_DNN', gru_model_adapt,
+        #                                                                False, dnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # GRU_CRNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'GRU_CRNN', gru_model_adapt,
+        #                                                                False, crnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # CNN_GRU
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'CNN_GRU', cnn_model_adapt,
+        #                                                                False, gru_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # CNN_DNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'CNN_DNN', cnn_model_adapt,
+        #                                                                False, dnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # CNN_CRNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'CNN_CRNN', cnn_model_adapt,
+        #                                                                False, crnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # DNN_GRU
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'DNN_GRU', dnn_model_adapt,
+        #                                                                False, gru_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # DNN_CNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'DNN_CNN', dnn_model_adapt,
+        #                                                                False, cnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # DNN_CRNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'DNN_CRNN', dnn_model_adapt,
+        #                                                                False, crnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # CRNN_GRU
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'CRNN_GRU', crnn_model_adapt,
+        #                                                                False, gru_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # CRNN_CNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'CRNN_CNN', crnn_model_adapt,
+        #                                                                False, cnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # # CRNN_DNN
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                'DNN_CRNN', crnn_model_adapt,
+        #                                                                False, dnn_model_eval, False, X_seq,
+        #                                                                X_mat, y_seq, y_single, res_adapt_eval,
+        #                                                                count_adapt_eval)
+        #
+        # res_adapt_eval, count_adapt_eval = AnE.deep_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                    'GRU_FEAT', gru_model_adapt,
+        #                                                                    FBE.classifiers, X_seq, matN, matM, X_feat,
+        #                                                                    y_seq, y_single, res_adapt_eval,
+        #                                                                    count_adapt_eval)
+        #
+        # res_adapt_eval, count_adapt_eval = AnE.ir_adapt_and_deep_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                   'IR_GRU', ir,
+        #                                                                   gru_model_eval, X_seq,
+        #                                                                   y_seq, y_single, res_adapt_eval,
+        #                                                                   count_adapt_eval)
+        #
+        # res_adapt_eval, count_adapt_eval = AnE.svd_adapt_and_deep_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                    'SVD_GRU', svd,
+        #                                                                    gru_model_eval, X_seq, matN, matM,
+        #                                                                    y_seq, y_single, res_adapt_eval,
+        #                                                                    count_adapt_eval)
+        #
+        # res_adapt_eval, count_adapt_eval = AnE.bpr_adapt_and_deep_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                    'BPR_GRU', bpr,
+        #                                                                    gru_model_eval, X_seq, matN, matM,
+        #                                                                    y_seq, y_single, res_adapt_eval,
+        #                                                                    count_adapt_eval)
+        #
+        # res_adapt_eval, count_adapt_eval = AnE.ir_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                  'IR_FEAT', ir,
+        #                                                                  FBE.classifiers, X_seq, matN, matM, X_feat,
+        #                                                                  y_seq, y_single, res_adapt_eval,
+        #                                                                  count_adapt_eval)
+        #
+        # res_adapt_eval, count_adapt_eval = AnE.svd_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                   'SVD_FEAT', svd,
+        #                                                                   FBE.classifiers, X_seq, matN, matM, X_feat,
+        #                                                                   y_seq, y_single, res_adapt_eval,
+        #                                                                   count_adapt_eval)
+        #
+        # res_adapt_eval, count_adapt_eval = AnE.bpr_adapt_and_reg_evaluate(np.array(dh.inv_trans[epoch]),
+        #                                                                   'BPR_FEAT', bpr,
+        #                                                                   FBE.classifiers, X_seq, matN, matM, X_feat,
+        #                                                                   y_seq, y_single, res_adapt_eval,
+        #                                                                   count_adapt_eval)
 
     i += 1
 ts = time.time()
