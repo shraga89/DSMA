@@ -174,8 +174,8 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 print(K.tensorflow_backend._get_available_gpus())
 E = 'cos'
-dataset = 'TH'
-dh = DH.DataHandler('../VectorsTH.csv', '../_matrix.csv', False)
+dataset = 'UNI'
+dh = DH.DataHandler('../VectorsUNI.csv', '../_matrix.csv', False)
 dh.build_eval(False)
 dh.build_feat_dataset()
 # print(dh.conf_dict)
