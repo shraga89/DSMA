@@ -29,7 +29,7 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # sess = tf.Session(config=config)
 # keras.backend.set_session(sess)
 # config = tf.ConfigProto(device_count={'GPU': 2, 'CPU': 2})
-config = tf.ConfigProto(device_count={'GPU': 2, 'CPU': 2})
+config = tf.ConfigProto(device_count={'GPU': 2, 'CPU': 20})
 config.gpu_options.allow_growth = True
 config.gpu_options.per_process_gpu_memory_fraction = 0.95
 config.allow_soft_placement = True
@@ -46,7 +46,7 @@ def model_worker_adapt(model, X, y, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    for _ in range(20):
+    for _ in range(4):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -78,7 +78,7 @@ def model_worker_eval(model, X, y, e, b, v):
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
-    for _ in range(20):
+    for _ in range(4):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -105,7 +105,7 @@ def model_worker_multi(model, X, y_full, y_reg, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
-    for _ in range(20):
+    for _ in range(4):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -173,14 +173,14 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'cos'
-dataset = 'UNI'
-dh = DH.DataHandler('../VectorsUNI.csv', '../_matrix.csv', False)
+E = 'f'
+dataset = 'WF'
+dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', True)
 dh.build_eval(False)
 dh.build_feat_dataset()
 # print(dh.conf_dict)
 kfold = KFold(5, True, 1)
-keys = np.array(list(dh.conf_dict.keys()))[:]
+keys = np.array(list(dh.conf_dict.keys()))[:1000]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
 res_adapt = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r', 'old_f', 'new_p', 'new_r', 'new_f'])
 res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r',
