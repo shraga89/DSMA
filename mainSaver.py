@@ -21,14 +21,14 @@ import keras
 
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
-os.environ["CUDA_VISIBLE_DEVICES"] = "0,1"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 # tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 # tf.Session(config=tf.ConfigProto(log_device_placement=True))
 # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
 # config = tf.ConfigProto(log_device_placement=True, gpu_options=gpu_options)
 # sess = tf.Session(config=config)
 # keras.backend.set_session(sess)
-config = tf.ConfigProto(device_count={'GPU': 2, 'CPU': 2})
+config = tf.ConfigProto(device_count={'GPU': 1, 'CPU': 2})
 # config = tf.ConfigProto(device_count={'GPU': 0})
 config.gpu_options.allow_growth = True
 config.gpu_options.per_process_gpu_memory_fraction = 0.95
@@ -173,7 +173,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'p'
+E = 'r'
 dataset = 'WF'
 dh = DH.DataHandler('../VectorsWFtrimmed.csv', '../_matrix.csv', False)
 dh.build_eval(False)
