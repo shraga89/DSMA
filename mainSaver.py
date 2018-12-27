@@ -29,7 +29,7 @@ os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # sess = tf.Session(config=config)
 # keras.backend.set_session(sess)
 # config = tf.ConfigProto(device_count={'GPU': 2, 'CPU': 2})
-config = tf.ConfigProto(device_count={'GPU': 2, 'CPU': 20})
+config = tf.ConfigProto(device_count={'GPU': 0, 'CPU': 20})
 config.gpu_options.allow_growth = True
 config.gpu_options.per_process_gpu_memory_fraction = 0.95
 config.allow_soft_placement = True
