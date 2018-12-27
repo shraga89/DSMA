@@ -1,4 +1,14 @@
-1. Anaconda 3
+1. Anaconda 3:
+wget https://repo.continuum.io/archive/Anaconda3-5.0.1-Linux-x86_64.sh
+bash Anaconda3-5.0.1-Linux-x86_64.sh
+source .bashrc
 2. tensorflow (or tensorflow-gpu)
+pip install tensorflow (tensorflow-gpu)
 3. keras
+pip install keras
 4. surprise
+pip install surprise
+5. clone the DSMA Repository:
+git clone https://github.com/shraga89/DSMA
+6. configure...
+7. run mainSaver.py
