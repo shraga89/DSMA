@@ -175,12 +175,12 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 print(K.tensorflow_backend._get_available_gpus())
 E = 'cos'
 dataset = 'PO'
-dh = DH.DataHandler('../VectorsPO.csv', '../_matrix.csv', True)
+dh = DH.DataHandler('../VectorsPO.csv', '../_matrix.csv', False)
 dh.build_eval(False)
 dh.build_feat_dataset()
 # print(dh.conf_dict)
 kfold = KFold(5, True, 1)
-keys = np.array(list(dh.conf_dict.keys()))[:1000]
+keys = np.array(list(dh.conf_dict.keys()))[:]
 # keys = np.array(random.sample(range(len(list(dh.conf_dict.keys()))), 100))
 res_adapt = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r', 'old_f', 'new_p', 'new_r', 'new_f'])
 res_adapt_eval = pd.DataFrame(columns=['instance', 'type', 'k', 'old_p', 'old_r',
