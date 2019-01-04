@@ -173,7 +173,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'cos'
+E = 'p'
 dataset = 'PO_noaug'
 dh = DH.DataHandler('../VectorsPO.csv', '../_matrix.csv', False)
 dh.build_eval(False)
