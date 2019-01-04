@@ -21,7 +21,7 @@ import keras
 
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
-os.environ["CUDA_VISIBLE_DEVICES"] = "0"
+os.environ["CUDA_VISIBLE_DEVICES"] = "1"
 tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
 tf.Session(config=tf.ConfigProto(log_device_placement=True))
 # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
@@ -173,7 +173,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'r'
+E = 'p'
 dataset = 'PO'
 dh = DH.DataHandler('../VectorsPO.csv', '../_matrix.csv', False)
 dh.build_eval(False)
