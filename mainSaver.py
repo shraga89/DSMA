@@ -46,7 +46,7 @@ def model_worker_adapt(model, X, y, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    for _ in range(6):
+    for _ in range(0):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -78,7 +78,7 @@ def model_worker_eval(model, X, y, e, b, v):
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
-    for _ in range(6):
+    for _ in range(0):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -105,7 +105,7 @@ def model_worker_multi(model, X, y_full, y_reg, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
-    for _ in range(6):
+    for _ in range(0):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -173,7 +173,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'r'
+E = 'f'
 dataset = 'PO'
 dh = DH.DataHandler('../VectorsPO.csv', '../_matrix.csv', False)
 dh.build_eval(False)
