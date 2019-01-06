@@ -9,21 +9,20 @@ import MultiTaskNet as MTN
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
-from keras import backend as K
-import tensorflow as tf
 import datetime
 import time
-import os
 import random
 import multiprocessing as mp
 import os
-import keras
 
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-# tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
-# tf.Session(config=tf.ConfigProto(log_device_placement=True))
+import keras
+from keras import backend as K
+import tensorflow as tf
+tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
+tf.Session(config=tf.ConfigProto(log_device_placement=True))
 # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
 # config = tf.ConfigProto(log_device_placement=True, gpu_options=gpu_options)
 # sess = tf.Session(config=config)
