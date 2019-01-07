@@ -28,8 +28,8 @@ os.environ["CUDA_VISIBLE_DEVICES"] = "0"
 # config = tf.ConfigProto(log_device_placement=True, gpu_options=gpu_options)
 # sess = tf.Session(config=config)
 # keras.backend.set_session(sess)
-# config = tf.ConfigProto(device_count={'GPU': 1, 'CPU': 0})
-config = tf.ConfigProto(device_count={'GPU': 1}, intra_op_parallelism_threads=1, inter_op_parallelism_threads=1)
+config = tf.ConfigProto(device_count={'GPU': 1, 'CPU': 12})
+# config = tf.ConfigProto(device_count={'GPU': 1}, intra_op_parallelism_threads=1)
 config.gpu_options.allow_growth = True
 config.gpu_options.per_process_gpu_memory_fraction = 0.95
 # config.allow_soft_placement = True
@@ -173,7 +173,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'p'
+E = 'f'
 dataset = 'PO_noaug'
 dh = DH.DataHandler('../VectorsPO.csv', '../_matrix.csv', False)
 dh.build_eval(False)
