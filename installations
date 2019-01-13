@@ -10,5 +10,5 @@ pip install keras
 pip install surprise
 5. clone the DSMA Repository:
 git clone https://github.com/shraga89/DSMA
-6. configure...
+6. configure..
 7. run mainSaver.py
