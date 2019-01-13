@@ -22,13 +22,13 @@ import tensorflow as tf
 os.environ['QT_QPA_PLATFORM'] = 'offscreen'
 # os.environ["CUDA_DEVICE_ORDER"]="PCI_BUS_ID"   # see issue #152
 os.environ["CUDA_VISIBLE_DEVICES"] = "0"
-# tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
-# tf.Session(config=tf.ConfigProto(log_device_placement=True))
+tf.Session(config=tf.ConfigProto(intra_op_parallelism_threads=28))
+tf.Session(config=tf.ConfigProto(log_device_placement=True))
 # gpu_options = tf.GPUOptions(per_process_gpu_memory_fraction=0.5)
 # config = tf.ConfigProto(log_device_placement=True, gpu_options=gpu_options)
 # sess = tf.Session(config=config)
 # keras.backend.set_session(sess)
-config = tf.ConfigProto(device_count={'GPU': 1, 'CPU': 12})
+config = tf.ConfigProto(device_count={'GPU': 1, 'CPU': 28})
 # config = tf.ConfigProto(device_count={'GPU': 1}, intra_op_parallelism_threads=1)
 config.gpu_options.allow_growth = True
 config.gpu_options.per_process_gpu_memory_fraction = 0.95
@@ -46,7 +46,7 @@ def model_worker_adapt(model, X, y, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    for _ in range(0):
+    for _ in range(6):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -78,7 +78,7 @@ def model_worker_eval(model, X, y, e, b, v):
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
-    for _ in range(0):
+    for _ in range(6):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -105,7 +105,7 @@ def model_worker_multi(model, X, y_full, y_reg, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
-    for _ in range(0):
+    for _ in range(6):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -174,7 +174,7 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 print(K.tensorflow_backend._get_available_gpus())
 E = 'cos'
-dataset = 'PO_noaug'
+dataset = 'PO'
 dh = DH.DataHandler('../VectorsPO.csv', '../_matrix.csv', False)
 dh.build_eval(False)
 dh.build_feat_dataset()
