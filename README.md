@@ -6,4 +6,5 @@
 4. [Surprise](http://surpriselib.com/)
 
 ## Installation:
-1. Create a dataset using [ORE](https://bitbucket.org/tomers77/ontobuilder-research-environment/src)
+1. Create a dataset using [ORE](https://bitbucket.org/tomers77/ontobuilder-research-environment/src) by [running VectorPrinting experiment](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/cmd) with respect to the selected [domain of interest](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/Datasets) and [schema matchers](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/MatchingSystems).
+2. 
