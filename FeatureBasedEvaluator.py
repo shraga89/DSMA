@@ -5,6 +5,7 @@ import math
 from sklearn.decomposition import PCA
 from sklearn.metrics.pairwise import cosine_similarity
 
+
 classifiers = [
     ('SVM', svm.SVR()),
     ('SGD Regression', linear_model.SGDRegressor()),
