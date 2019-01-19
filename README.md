@@ -1,10 +1,26 @@
-# Deep SMAnE - Deep Similarity Matrix Adjustment and Evaluation to Improve Schema Matching
+# ![#1589F0](*Deep SMAnE*) - Deep Similarity Matrix Adjustment and Evaluation to Improve Schema Matching
 ## Prerequisites:
 1. [Anaconda 3](https://www.anaconda.com/download/)
 2. [Tensorflow (or tensorflow-gpu)](https://www.tensorflow.org/install/)
 3. [Keras](https://keras.io/#installation)
 4. [Surprise](http://surpriselib.com/)
 
-## Installation:
-1. Create a dataset using [ORE](https://bitbucket.org/tomers77/ontobuilder-research-environment/src) by [running VectorPrinting experiment](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/cmd) with respect to the selected [domain of interest](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/Datasets) and [schema matchers](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/MatchingSystems).
-2. 
+## Getting Started
+
+### Installation:
+1. Create a dataset using [ORE](https://bitbucket.org/tomers77/ontobuilder-research-environment/src) by [running VectorPrinting experiment](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/cmd) with respect to the selected [domain of interest](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/Datasets) and [schema matchers](https://bitbucket.org/tomers77/ontobuilder-research-environment/wiki/MatchingSystems).  
+1.1 An example dataset is available for download: [Beta Dataset](https://github.com/shraga89/DSMA/VectorsBeta.csv)
+2. Clone the [SMAnE repository](https://github.com/shraga89/DSMA/)
+3. Update Config.py with your configuration details.
+
+### Running
+1. Run mainSaver.py to train and test your dataset using a 5-fold cross validation.  
+1.1 You can also run a pre-trained model using mainLoader.py.
+2. The results will appear in the 'results' folder, there you will find a notebook (Analyzer.ipynb) to help you analyze the results.
+3. Your models will appear in the 'models' folder, there you will find a notebook (Visualizer.ipynb) to help you visualize the models.
+
+## The Paper
+The paper is under review for SIGKDD applied data science track.
+
+## The Team
+Deep SMAnE was developed at the Technion -- Israel Institute of Technology by [Roee Shraga](https://sites.google.com/view/roee-shraga/) under the supervision of [Prof. Avigdor Gal](https://agp.iem.technion.ac.il/avigal/) in collaboration with Haggai Roitman from IBM Research - AI.

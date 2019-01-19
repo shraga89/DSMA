@@ -6,6 +6,7 @@ import ModelVisualizer as MV
 import AdaptAndEvaluate as AnE
 import FeatureBasedEvaluator as FBE
 import MultiTaskNet as MTN
+import Config as conf
 import numpy as np
 import pandas as pd
 from sklearn.model_selection import KFold
@@ -46,7 +47,7 @@ def model_worker_adapt(model, X, y, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, y_seq, epochs=e, batch_size=b, verbose=v)
-    for _ in range(0):
+    for _ in range(conf.aug):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -78,7 +79,7 @@ def model_worker_eval(model, X, y, e, b, v):
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     model.fit(X_seq, y, epochs=e, batch_size=b, verbose=v)
-    for _ in range(0):
+    for _ in range(conf.aug):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -105,7 +106,7 @@ def model_worker_multi(model, X, y_full, y_reg, e, b, v):
     X_seq = mat.T.reshape(1, mat.shape[0] * mat.shape[1], 1)
     y_seq = mat.reshape(1, exMat.shape[0] * exMat.shape[1], 1)
     model.fit(X_seq, {'ad_out': y_seq, 'ev_out': y_reg}, epochs=e, batch_size=b, verbose=v)
-    for _ in range(0):
+    for _ in range(conf.aug):
         i = random.randint(0, mat.shape[0] - 1)
         j = random.randint(0, mat.shape[0] - 1)
         mat_i = mat[i]
@@ -173,9 +174,9 @@ def eval_worker(dh, X_feat, X_seq, y_single, gru_model_eval, cnn_model_eval, dnn
 
 
 print(K.tensorflow_backend._get_available_gpus())
-E = 'r'
-dataset = 'OAEI_noaug'
-dh = DH.DataHandler('../VectorsOAEI.csv', '../_matrix.csv', False)
+E = conf.E
+dataset = conf.dataset
+dh = DH.DataHandler(conf.datafile, None, conf.syn)
 dh.build_eval(False)
 dh.build_feat_dataset()
 # print(dh.conf_dict)
@@ -209,6 +210,8 @@ for train, test in kfold.split(keys):
     crnn_model_adapt = DA.build_cnn_gru(16)
     crnn_model_eval = DE.build_cnn_gru(16)
     multi_model = MTN.build_multi(32)
+    # for layer in multi_model.layers:
+    #     print(layer, layer.output_shape)
 
     ir = BA.build_ir()
     svd = BA.build_svdpp()
