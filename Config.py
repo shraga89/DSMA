@@ -1,4 +1,4 @@
-E = 'p'
+E = 'r'
 dataset = 'OAEI_noaug'
 datafile = '../VectorsOAEI.csv'
 syn = False
