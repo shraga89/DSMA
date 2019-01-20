@@ -1,5 +1,5 @@
-E = 'cos'
-dataset = 'PO'
-datafile = '../VectorsPO.csv'
+E = 'p'
+dataset = 'OAEI'
+datafile = '../VectorsOAEI.csv'
 syn = False
-aug = 4
+aug = 1
