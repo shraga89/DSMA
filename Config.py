@@ -1,5 +1,5 @@
-E = 'f'
+E = 'p'
 dataset = 'OAEI_noaug'
-datafile = '../VectorsWFsmall.csv'
+datafile = '../VectorsOAEI.csv'
 syn = False
-aug = 4
+aug = 0
