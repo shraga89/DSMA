@@ -1,5 +1,5 @@
-E = 'r'
-dataset = 'OAEI_noaug'
-datafile = '../VectorsOAEI.csv'
+E = 'cos'
+dataset = 'PO'
+datafile = '../VectorsPO.csv'
 syn = False
-aug = 0
+aug = 4
