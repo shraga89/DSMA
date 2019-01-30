@@ -1,5 +1,5 @@
 E = 'p'
-dataset = 'OAEI'
-datafile = '../VectorsOAEI.csv'
+dataset = 'PO'
+datafile = '../VectorsPO.csv'
 syn = False
 aug = 5
