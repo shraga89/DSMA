@@ -41,7 +41,7 @@ for train, test in kfold.split(keys):
         y_single = dh.fullMat_dict[epoch][E]
 
         # print(X_mat[0].reshape(X_mat.shape[1:3]))
-        fm.fit(X_seq.reshape(X_seq.shape[1]), y_seq.reshape(y_seq.shape[1]))
+        fm.fit(X_seq.reshape(X_seq.shape[1:3]), y_seq.reshape(y_seq.shape[1]))
 
     for epoch in test:
         ts = time.time()
