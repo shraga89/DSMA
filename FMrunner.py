@@ -21,7 +21,7 @@ def loadData(x_mat, y_mat):
         for ii, i in enumerate(u):
             if i == 1.0:
                 data.append({"user_id": str(ui), "movie_id": str(ii)})
-                y.append(float(x_mat[ui, ii]))
+                y.append(float(y_mat[ui, ii]))
                 users.add(ui)
                 items.add(ii)
     return (data, np.array(y), users, items)
