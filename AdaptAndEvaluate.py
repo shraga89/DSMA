@@ -5,6 +5,7 @@ from surprise import Reader
 import pandas as pd
 from scipy import sparse
 import FeatureBasedEvaluator as FBE
+from sklearn.feature_extraction import DictVectorizer
 
 
 def deep_adapt_and_evaluate(instance, _type, adaptor, is_adaptor_mat, evaluator, is_evaluator_mat, X_seq, X_mat, y,
@@ -604,20 +605,26 @@ def reg_adapt_svd(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, cou
     return res_adapt, count_adapt
 
 
+def loadData(x_mat):
+    data = []
+    y = []
+    users = set()
+    items = set()
+    for ui, u in enumerate(x_mat):
+        for ii, i in enumerate(u):
+            data.append({ "user_id": str(ui), "movie_id": str(ii)})
+            y.append(float(x_mat[ui, ii]))
+            users.add(ui)
+            items.add(ii)
+    return (data, np.array(y), users, items)
+
+
 def reg_adapt_fm(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, count_adapt):
-    X = X.reshape(X.shape[1])
-    items = list()
-    for j in range(size_m):
-        items += [j] * size_n
-    users = list(range(size_n)) * size_m
-    ratings_dict = {'itemID': items,
-                    'userID': users,
-                    'rating': X}
-    adaptor.fit(x)
-    yhat_full = list()
-    test = adaptor.test(x.build_testset())
-    for t in test:
-        yhat_full += [t[2]]
+
+    (test_data, y_test, test_users, test_items) = loadData(X[0].reshape(X.shape[1:3]))
+    v = DictVectorizer()
+    X_test = v.transform(test_data)
+    yhat_full = adaptor.predict(X_test)
     yhat_full = np.array(yhat_full)
     yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
 
