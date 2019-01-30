@@ -604,6 +604,25 @@ def reg_adapt_svd(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, cou
     return res_adapt, count_adapt
 
 
+def reg_adapt_fm(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, count_adapt):
+    X = X.reshape(X.shape[1])
+    try:
+        yhat_full = adaptor.predict(X)
+    except:
+        yhat_full = np.ceil(np.array(X.reshape(y.shape)))
+    yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
+    k_adapt = 0
+    yhat_full[np.isnan(yhat_full)] = 0
+    res_row_adapt = np.concatenate((instance, _type, str(k_adapt),
+                                    precision_recall_fscore_support(y, np.ceil(np.array(X.reshape(yhat_full.shape))),
+                                                                    average='macro')[:3],
+                                    precision_recall_fscore_support(y, yhat_full, average='macro')[:3]),
+                                   axis=None)
+    res_adapt.loc[count_adapt] = res_row_adapt
+    count_adapt += 1
+    return res_adapt, count_adapt
+
+
 def reg_adapt_bpr(instance, _type, X, X_seq, y, adaptor, res_adapt, count_adapt):
     try:
         adaptor[0].train(sparse.csr_matrix(X.reshape(X.shape[1:3])), adaptor[1], adaptor[2])

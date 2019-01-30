@@ -1,6 +1,7 @@
 from sklearn.isotonic import IsotonicRegression
 import bpr
 from surprise import SVDpp
+from pyfm import pylibfm
 
 
 def build_ir():
@@ -20,3 +21,7 @@ def build_bpr():
 
 def build_svdpp():
     return SVDpp()
+
+
+def bulid_fm():
+    return pylibfm.FM()
