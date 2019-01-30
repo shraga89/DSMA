@@ -2,6 +2,7 @@
 <p align="center">
 <img src ="/fig.JPG">
 </p>
+
 ## Prerequisites:
 1. [Anaconda 3](https://www.anaconda.com/download/)
 2. [Tensorflow (or tensorflow-gpu)](https://www.tensorflow.org/install/)
