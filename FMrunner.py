@@ -7,7 +7,25 @@ import pandas as pd
 from sklearn.model_selection import KFold
 import datetime
 import time
+import os
 from scipy import sparse
+from sklearn.feature_extraction import DictVectorizer
+
+
+def loadData(x_mat, y_mat):
+    data = []
+    y = []
+    users=set()
+    items=set()
+    for ui, u in enumerate(y_mat):
+        for ii, i in enumerate(u):
+            if i == 1.0:
+                data.append({ "user_id": str(ui), "movie_id": str(ii)})
+                y.append(float(x_mat[ui, ii]))
+                users.add(ui)
+                items.add(ii)
+    return (data, np.array(y), users, items)
+
 
 E = conf.E
 dataset = conf.dataset
@@ -40,9 +58,15 @@ for train, test in kfold.split(keys):
         y_mat = dh.realConf_dict_mat[epoch]
         y_single = dh.fullMat_dict[epoch][E]
 
+        (train_data, y_train, train_users, train_items) = loadData(X_mat, y_mat)
+        v = DictVectorizer()
+        X_train = v.fit_transform(train_data)
+        fm.fit(X_train, y_train)
+
         # print(X_mat[0].reshape(X_mat.shape[1:3]))
-        fm.fit(sparse.csr_matrix(X_mat.reshape(X_mat.shape[1:3])), sparse.csr_matrix(y_seq.reshape(y_seq.shape[1])))
-        # fm.fit(X_seq.reshape(X_seq.shape[1:3]), y_seq.reshape(y_seq.shape[1]))
+        # fm.fit(sparse.csr_matrix(X_mat.reshape(X_mat.shape[1:3])), np.repeat(1.0, X_mat.shape[1]))
+        # X_seq.reshape(X_seq.shape[1:3]), y_seq.reshape(y_seq.shape[1])
+        # fm.fit()
 
     for epoch in test:
         ts = time.time()
