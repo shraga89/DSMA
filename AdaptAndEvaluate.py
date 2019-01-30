@@ -612,7 +612,7 @@ def loadData(x_mat):
     items = set()
     for ui, u in enumerate(x_mat):
         for ii, i in enumerate(u):
-            data.append({ "user_id": str(ui), "movie_id": str(ii)})
+            data.append({"user_id": str(ui), "movie_id": str(ii)})
             y.append(float(x_mat[ui, ii]))
             users.add(ui)
             items.add(ii)
@@ -623,7 +623,7 @@ def reg_adapt_fm(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, coun
 
     (test_data, y_test, test_users, test_items) = loadData(X[0].reshape(X.shape[1:3]))
     v = DictVectorizer()
-    X_test = v.transform(test_data)
+    X_test = v.fit_transform(test_data)
     yhat_full = adaptor.predict(X_test)
     yhat_full = np.array(yhat_full)
     yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
