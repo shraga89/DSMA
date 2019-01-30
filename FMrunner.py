@@ -15,10 +15,11 @@ from sklearn.feature_extraction import DictVectorizer
 def loadData(x_mat, y_mat):
     data = []
     y = []
-    users=set()
-    items=set()
+    users = set()
+    items = set()
     for ui, u in enumerate(y_mat):
         for ii, i in enumerate(u):
+            print(i)
             if i == 1.0:
                 data.append({ "user_id": str(ui), "movie_id": str(ii)})
                 y.append(float(x_mat[ui, ii]))
@@ -58,7 +59,8 @@ for train, test in kfold.split(keys):
         y_mat = dh.realConf_dict_mat[epoch]
         y_single = dh.fullMat_dict[epoch][E]
 
-        (train_data, y_train, train_users, train_items) = loadData(X_mat, y_mat)
+        (train_data, y_train, train_users, train_items) = loadData(X_mat[0].reshape(X_mat.shape[1:3]),
+                                                                   y_mat[0].reshape(y_mat.shape[1:3]))
         v = DictVectorizer()
         X_train = v.fit_transform(train_data)
         fm.fit(X_train, y_train)
