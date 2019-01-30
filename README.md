@@ -1,5 +1,7 @@
 # *Deep SMAnE* - Deep Similarity Matrix Adjustment and Evaluation to Improve Schema Matching
-<center>![pic](./fig.JPG)</center>
+<p align="center">
+![pic](./fig.JPG)
+</p>
 ## Prerequisites:
 1. [Anaconda 3](https://www.anaconda.com/download/)
 2. [Tensorflow (or tensorflow-gpu)](https://www.tensorflow.org/install/)
