@@ -56,8 +56,8 @@ class DataHandler:
         self.matN = {}
         self.matM = {}
         self.build_dataset_reg()
-        if syn:
-            self.transform_2_syntatic()
+        # if syn:
+        #     self.transform_2_syntatic()
         self.orig_mats_mat = {}
         self.orig_mats_seq = {}
         self.fullMat_dict = {}

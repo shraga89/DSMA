@@ -1,5 +1,5 @@
 E = 'p'
-dataset = 'PO'
-datafile = '../VectorsPO.csv'
+dataset = 'WF'
+datafile = '../VectorsWFtrimmed.csv'
 syn = False
 aug = 5
