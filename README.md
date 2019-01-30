@@ -1,6 +1,6 @@
 # *Deep SMAnE* - Deep Similarity Matrix Adjustment and Evaluation to Improve Schema Matching
 <p align="center">
-![pic](./fig.JPG)
+<img src ="/fig.JPG">
 </p>
 ## Prerequisites:
 1. [Anaconda 3](https://www.anaconda.com/download/)
