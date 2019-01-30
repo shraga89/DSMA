@@ -19,11 +19,10 @@ def loadData(x_mat, y_mat):
     items = set()
     for ui, u in enumerate(y_mat):
         for ii, i in enumerate(u):
-            if i == 1.0:
-                data.append({"user_id": str(ui), "movie_id": str(ii)})
-                y.append(float(y_mat[ui, ii]))
-                users.add(ui)
-                items.add(ii)
+            data.append({"user_id": str(ui), "movie_id": str(ii)})
+            y.append(float(y_mat[ui, ii]))
+            users.add(ui)
+            items.add(ii)
     return (data, np.array(y), users, items)
 
 
@@ -86,7 +85,7 @@ for train, test in kfold.split(keys):
         matN = dh.matN[epoch]
         matM = dh.matM[epoch]
 
-        res_adapt, count_adapt = AnE.reg_adapt_fm(np.array(dh.inv_trans[epoch]), 'FM', X_mat, y_seq, fm,
+        res_adapt, count_adapt = AnE.reg_adapt_fm(np.array(dh.inv_trans[epoch]), 'FM', y_mat, y_seq, fm,
                                                    matM, matN, res_adapt, count_adapt)
     i += 1
 

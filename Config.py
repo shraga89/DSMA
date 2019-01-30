@@ -2,4 +2,4 @@ E = 'p'
 dataset = 'WF'
 datafile = '../VectorsWFtrimmed.csv'
 syn = False
-aug = 0
+aug = 5
