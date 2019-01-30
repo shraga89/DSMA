@@ -1,5 +1,5 @@
 E = 'p'
-dataset = 'OAEI'
-datafile = '../VectorsOAEI.csv'
+dataset = 'WF'
+datafile = '../VectorsWFtrimmed.csv'
 syn = False
-aug = 2
+aug = 0
