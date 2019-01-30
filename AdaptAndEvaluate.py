@@ -625,7 +625,7 @@ def reg_adapt_fm(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, coun
     v = DictVectorizer()
     X_test = v.fit_transform(test_data)
     yhat_full = adaptor.predict(X_test)
-    yhat_full[np.isnan(yhat_full)] = 0
+    yhat_full[np.isnan(yhat_full)] = np.ceil(np.array(X.reshape(yhat_full.shape)))[np.isnan(yhat_full)]
     yhat_full = np.array(yhat_full)
     yhat_full = np.array(yhat_full.reshape(len(yhat_full), 1)).round()
     # print(yhat_full.dtype)

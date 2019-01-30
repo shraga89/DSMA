@@ -85,7 +85,7 @@ for train, test in kfold.split(keys):
         matN = dh.matN[epoch]
         matM = dh.matM[epoch]
 
-        res_adapt, count_adapt = AnE.reg_adapt_fm(np.array(dh.inv_trans[epoch]), 'FM', y_mat, y_seq, fm,
+        res_adapt, count_adapt = AnE.reg_adapt_fm(np.array(dh.inv_trans[epoch]), 'FM', X_mat, y_seq, fm,
                                                    matM, matN, res_adapt, count_adapt)
     i += 1
 
