@@ -627,7 +627,8 @@ def reg_adapt_fm(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, coun
     yhat_full = adaptor.predict(X_test)
     yhat_full = np.array(yhat_full)
     yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
-
+    print(yhat_full.dtype)
+    print(y.dtype)
     k_adapt = 0
     res_row_adapt = np.concatenate((instance, _type, str(k_adapt),
                                     precision_recall_fscore_support(y, np.ceil(np.array(X.reshape(yhat_full.shape))),
