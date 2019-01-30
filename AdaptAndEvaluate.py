@@ -606,13 +606,22 @@ def reg_adapt_svd(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, cou
 
 def reg_adapt_fm(instance, _type, X, y, adaptor, size_m, size_n, res_adapt, count_adapt):
     X = X.reshape(X.shape[1])
-    try:
-        yhat_full = adaptor.predict(X)
-    except:
-        yhat_full = np.ceil(np.array(X.reshape(y.shape)))
+    items = list()
+    for j in range(size_m):
+        items += [j] * size_n
+    users = list(range(size_n)) * size_m
+    ratings_dict = {'itemID': items,
+                    'userID': users,
+                    'rating': X}
+    adaptor.fit(x)
+    yhat_full = list()
+    test = adaptor.test(x.build_testset())
+    for t in test:
+        yhat_full += [t[2]]
+    yhat_full = np.array(yhat_full)
     yhat_full = np.round(np.array(yhat_full.reshape(len(yhat_full), 1)))
+
     k_adapt = 0
-    yhat_full[np.isnan(yhat_full)] = 0
     res_row_adapt = np.concatenate((instance, _type, str(k_adapt),
                                     precision_recall_fscore_support(y, np.ceil(np.array(X.reshape(yhat_full.shape))),
                                                                     average='macro')[:3],
