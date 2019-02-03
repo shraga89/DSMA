@@ -111,7 +111,7 @@ class DataHandler:
                 self.fullMat_dict[k]['p'], self.fullMat_dict[k]['r'], self.fullMat_dict[k][
                     'f'] = precision_recall_fscore_support(
                     np.ceil(np.array(self.conf_dict[k].reshape(len(self.conf_dict[k]), 1))),
-                    np.array(self.realConf_dict[k].reshape(len(self.realConf_dict[k]), 1)))[:3]
+                    np.array(self.realConf_dict[k].reshape(len(self.realConf_dict[k]), 1)), average=None)[:3]
                 for e in self.fullMat_dict[k]:
                     self.fullMat_dict[k][e] = np.array(self.fullMat_dict[k][e]).reshape(1, 1)
                 self.fullMat_dict[k]['cos'] = cosine_similarity(self.conf_dict[k].reshape(1, -1),
