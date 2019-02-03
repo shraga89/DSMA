@@ -63,6 +63,7 @@ class DataHandler:
         self.fullMat_dict = {}
         self.inv_trans = {v: k for k, v in self.trans.items()}
         self.feat_dict = {}
+        self.orig_results = pd.DataFrame(columns=['instance', 'P', 'R', 'F', 'COS'])
 
     def create_reg(self):
         # self.reg_df = pd.read_csv(self.reg_flie, low_memory=False, error_bad_lines = False)
@@ -115,6 +116,9 @@ class DataHandler:
                     self.fullMat_dict[k][e] = np.array(self.fullMat_dict[k][e]).reshape(1, 1)
                 self.fullMat_dict[k]['cos'] = cosine_similarity(self.conf_dict[k].reshape(1, -1),
                                                                 self.realConf_dict[k].reshape(1, -1))
+                res_row = np.concatenate((self.inv_trans[k], self.fullMat_dict[k]['p'], self.fullMat_dict[k]['r'], self.fullMat_dict[k][
+                    'f'], self.fullMat_dict[k]['cos']), axis=None)
+                self.orig_results.loc[k] = res_row
                 self.conf_dict_mat[k] = self.conf_dict[k].reshape(1, self.matN[k], self.matM[k], 1)
                 self.conf_dict_seq[k] = self.conf_dict[k].reshape(1, len(self.conf_dict[k]), 1)
                 self.orig_mats_mat[k] = self.conf_dict[k].reshape(self.matN[k], self.matM[k])
@@ -142,3 +146,6 @@ class DataHandler:
                 else:
                     self.conf_dict[k] = np.append(self.conf_dict[k], np.array(random_0()))
             self.conf_dict[k] = np.where(self.conf_dict[k] > 0.15, self.conf_dict[k], 0.0)
+
+    def get_orig_results(self):
+        return self.orig_results

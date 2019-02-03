@@ -94,6 +94,7 @@ st = datetime.datetime.fromtimestamp(ts).strftime('%d_%m_%Y_%H_%M')
 folder = './results/' + st + '_' + dataset + '_' + E
 if not os.path.exists(folder):
     os.makedirs(folder)
+dh.get_orig_results().to_csv(folder + '/orig.csv')
 res_adapt.to_csv(folder + '/adapt.csv')
 res_adapt_eval.to_csv(folder + '/adapt_eval.csv')
 res_eval.to_csv(folder + '/eval.csv')

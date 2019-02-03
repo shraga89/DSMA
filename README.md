@@ -8,6 +8,7 @@
 2. [Tensorflow (or tensorflow-gpu)](https://www.tensorflow.org/install/)
 3. [Keras](https://keras.io/#installation)
 4. [Surprise](http://surpriselib.com/)
+5. [pyFM](https://github.com/coreylynch/pyFM)
 
 ## Getting Started
 
