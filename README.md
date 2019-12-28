@@ -1,4 +1,4 @@
-# *Deep SMAnE* - Deep Similarity Matrix Adjustment and Evaluation to Improve Schema Matching
+# *ADnEV*: Cross-Domain Schema Matching using Deep Similarity Matrix Adjustment and Evaluation
 <p align="center">
 <img src ="/fig.JPG">
 </p>
@@ -25,7 +25,7 @@
 3. Your models will appear in the [models](https://github.com/shraga89/DSMA/blob/master/models) folder, there you will find a [notebook](https://github.com/shraga89/DSMA/blob/master/models/Visualizer.ipynb) to help you visualize the models.
 
 ## The Paper
-The paper is under review for SIGKDD applied data science track.
+The paper is under review.
 
 ## The Team
 *Deep SMAnE* was developed at the Technion - Israel Institute of Technology by [Roee Shraga](https://sites.google.com/view/roee-shraga/) under the supervision of [Prof. Avigdor Gal](https://agp.iem.technion.ac.il/avigal/) in collaboration with Haggai Roitman from IBM Research - AI.
