@@ -28,4 +28,4 @@
 The paper is under review.
 
 ## The Team
-*Deep SMAnE* was developed at the Technion - Israel Institute of Technology by [Roee Shraga](https://sites.google.com/view/roee-shraga/) under the supervision of [Prof. Avigdor Gal](https://agp.iem.technion.ac.il/avigal/) in collaboration with Haggai Roitman from IBM Research - AI.
+*ADnEV* was developed at the Technion - Israel Institute of Technology by [Roee Shraga](https://sites.google.com/view/roee-shraga/) under the supervision of [Prof. Avigdor Gal](https://agp.iem.technion.ac.il/avigal/) in collaboration with Haggai Roitman from IBM Research - AI.
