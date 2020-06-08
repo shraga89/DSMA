@@ -25,7 +25,20 @@
 3. Your models will appear in the [models](https://github.com/shraga89/DSMA/blob/master/models) folder, there you will find a [notebook](https://github.com/shraga89/DSMA/blob/master/models/Visualizer.ipynb) to help you visualize the models.
 
 ## The Paper
-The paper is under review.
+[*ADnEV: Cross-Domain Schema Matching using Deep Similarity Matrix Adjustment and Evaluation*](http://www.vldb.org/pvldb/vol13/p1401-shraga.pdf). Roee Shraga, Avigdor Gal, Haggai Roitman
+
+**BibTeX**:
+
+@article{shraga2020,
+  title={ADnEV: Cross-Domain Schema Matching using Deep Similarity Matrix Adjustment and Evaluation},
+  author={Shraga, Roee and Gal, Avigdor and Roitman, Haggai},
+  journal={Proceedings of the VLDB Endowment},
+  volume={13},
+  number={9},
+  pages={1401--1415},
+  year={2020},
+  publisher={VLDB Endowment}
+}
 
 ## The Team
 *ADnEV* was developed at the Technion - Israel Institute of Technology by [Roee Shraga](https://sites.google.com/view/roee-shraga/) under the supervision of [Prof. Avigdor Gal](https://agp.iem.technion.ac.il/avigal/) in collaboration with Haggai Roitman from IBM Research - AI.
