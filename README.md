@@ -29,15 +29,15 @@
 
 **BibTeX**:
 
-@article{shraga2020,
-  title={ADnEV: Cross-Domain Schema Matching using Deep Similarity Matrix Adjustment and Evaluation},
-  author={Shraga, Roee and Gal, Avigdor and Roitman, Haggai},
-  journal={Proceedings of the VLDB Endowment},
-  volume={13},
-  number={9},
-  pages={1401--1415},
-  year={2020},
-  publisher={VLDB Endowment}
+@article{shraga2020,  
+  title={ADnEV: Cross-Domain Schema Matching using Deep Similarity Matrix Adjustment and Evaluation},  
+  author={Shraga, Roee and Gal, Avigdor and Roitman, Haggai},  
+  journal={Proceedings of the VLDB Endowment},  
+  volume={13},  
+  number={9},  
+  pages={1401--1415},  
+  year={2020},  
+  publisher={VLDB Endowment}  
 }
 
 ## The Team
